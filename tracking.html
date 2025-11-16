@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WellMate - Tracking Minum</title>
+    <style>
+        /* Color Palette */
+        :root {
+            --biru-primary: #3478F5; 
+            --biru-muda: #C6E2FF; 
+            --hitam-gelap: #151515;
+            --putih: #FFFFFF;
+            --abu-terang: #F8F8F8;
+            --abu-medium: #AAAAAA;
+            --sukses: #34C759;
+            --warning: #FF9500;
+            /* Chart Colors */
+            --air: #3478F5; 
+            --jus: #FFB300; 
+            --kopi: #8B4513; 
+            --teh: #34C759; 
+            --sisa: #D3D3D3;
+        }
+
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--abu-terang);
+            color: var(--hitam-gelap);
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--putih);
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* START: Logo Styles BARU dari saran.html */
+        .sidebar h2 {
+            padding: 0 20px;
+            margin-top: 0;
+            color: var(--biru-primary);
+            margin-bottom: 25px; 
+        }
+
+        .logo-link {
+            margin-top: -50px;
+            margin-bottom: -25px;  
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo-link img {
+            height: 140px; 
+            margin-right: -40px;
+            margin-left: -32px;
+        }
+
+        .logo-link span {
+            font-size: 1.4em; 
+            color: var(--hitam-gelap);
+            font-weight: bold;
+            padding-bottom: 15px;
+        }
+        /* END: Logo Styles BARU */
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1; 
+        }
+
+        .nav-item {
+            padding: 0;
+            margin-bottom: 5px; 
+        }
+
+        .sidebar a {
+            display: flex; 
+            align-items: center;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: var(--hitam-gelap);
+            font-weight: 500;
+            border-left: 5px solid transparent;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a.active {
+            background-color: var(--biru-muda);
+            border-left-color: var(--biru-primary);
+            color: var(--biru-primary);
+        }
+
+        .nav-icon {
+            margin-right: 15px;
+            font-size: 1.1em;
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout-section {
+            padding: 20px 0 0 0;
+            border-top: 1px solid #EEE;
+        }
+
+        .logout-section a {
+            color: var(--hitam-gelap); 
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        /* Styling Top Header (Profil & Notifikasi) */
+        .top-header {
+            display: flex;
+            justify-content: flex-end; /* spy konten ke kanan */
+            align-items: center;
+            /* BARU: Margin Negatif untuk Garis Full Lebar */
+            margin-left: -30px; 
+            margin-right: -30px;
+            
+            /* Padding dipertahankan untuk jarak konten (ikon) */
+            padding: 0 30px 15px 30px; 
+            
+            border-bottom: 1px solid #E0E0E0; 
+            margin-bottom: 20px;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em; 
+            color: var(--biru-primary); /* Ubah warna ikon lonceng agar menonjol */
+            margin-left: 20px;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-image: url('fotoProfil.jpg'); 
+            background-size: cover;
+            background-position: center;
+            border: 2px solid var(--putih); 
+            box-shadow: 0 0 0 2px var(--biru-primary);
+            margin-left: 20px;
+            cursor: pointer;
+            flex-shrink: 0; /* spy ga menyusut */
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0px; 
+            right: 0px; 
+            width: 16px; 
+            height: 16px;
+            background-color: #FF4500; 
+            border-radius: 50%;
+            border: 2px solid var(--abu-terang); 
+            color: var(--putih);
+            font-size: 0.65em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            line-height: 1; /* penataan teks di dalam badge */
+        }
+
+        /* Wrapper untuk area Banner dan Summary */
+        .hydra-summary-wrapper {
+            margin: 0 0 20px 0; /* Jarak ke konten di bawahnya */
+            border-radius: 12px;
+            overflow: hidden; 
+            background-color: transparent;
+        }
+
+        /* Banner & Card Styles */
+        .welcome-banner {
+            background-color: var(--biru-primary);
+            color: var(--putih);
+            padding: 20px;
+            border-radius: 0; 
+            margin-bottom: 0;
+        }
+        
+        .welcome-banner h1 {
+            margin: 0 0 5px 0;
+            font-size: 1.8em;
+        }
+        
+        /* Summary Section */
+        .summary-section {
+            background-color: transparent;
+            padding: 20px;
+            border-bottom-left-radius: 0; 
+            border-bottom-right-radius: 0; 
+            margin-bottom: 0; 
+        }
+        
+        .summary-cards {
+            display: flex;
+            gap: 15px; 
+            justify-content: space-between;
+        }
+
+        .card-ringkasan {
+            background-color: var(--putih); 
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            font-size: 0.9em;
+        }
+        
+        .card-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--biru-primary);
+            margin: 5px 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-value-text {
+            line-height: 1;
+        }
+
+        .card-icon {
+            width: 30px;
+            height: 30px;
+            background-color: var(--biru-muda);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--biru-primary);
+            font-size: 1em;
+        }
+        
+        .card-label {
+            font-size: 0.85em;
+            color: var(--abu-medium);
+            line-height: 1.3;
+        }
+        
+        .progress-section {
+            background-color: var(--putih);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-chart-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .chart-visual {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-right: 40px;
+        }
+
+        .chart-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--hitam-gelap);
+        }
+        
+        .chart-text small {
+            font-size: 0.5em;
+            font-weight: normal;
+            display: block;
+            margin-top: -5px;
+            color: var(--abu-medium);
+        }
+
+        .progress-values {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .progress-item {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            font-weight: bold;
+        }
+
+        .progress-item.consumed {
+            background-color: var(--biru-muda);
+            color: var(--biru-primary);
+        }
+
+        .progress-item.remaining {
+            background-color: #FFEEEE;
+            color: #FF4500;
+        }
+        
+        .progress-item-label {
+            font-weight: normal;
+            font-size: 0.9em;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .tracking-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .tracking-list {
+            background-color: var(--putih);
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .tracking-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #EEEEEE;
+        }
+
+        .tracking-item:last-child {
+            border-bottom: none;
+        }
+
+        .tracking-icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .tracking-details {
+            flex-grow: 1;
+        }
+
+        .tracking-time {
+            font-size: 0.8em;
+            color: var(--abu-medium);
+        }
+
+        .tracking-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            color: var(--biru-primary);
+            margin-left: 10px;
+            padding: 5px;
+        }
+
+        .tracking-actions button.delete {
+            color: #FF4500;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); 
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--putih);
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: var(--biru-primary);
+            border-bottom: 2px solid var(--biru-muda);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--abu-medium);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        
+        input::placeholder {
+            color: var(--abu-medium); 
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: var(--biru-primary);
+            color: var(--putih);
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .btn-sm {
+            padding: 8px 15px;
+            width: auto;
+        }
+
+        .btn-danger {
+            background-color: #FF4500;
+            color: var(--putih);
+        }
+
+        .btn-secondary {
+            background-color: var(--abu-medium);
+            color: var(--putih);
+        }
+        
+        .alert-modal-content {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .alert-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .alert-icon.success {
+            color: var(--sukses);
+        }
+        
+        .alert-icon.warning {
+            color: var(--warning);
+        }
+        
+        .alert-message {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        
+        .alert-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .detail-message {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+        
+        .detail-message span {
+            color: var(--biru-primary);
+        }
+        
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            font-size: 0.95em;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dashed #EEE;
+        }
+        
+        .detail-color-box {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 8px;
+            border-radius: 3px;
+        }
+
+        .donut-chart {
+            transform: rotate(-90deg);
+        }
+
+        .chart-visual.large {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .chart-visual.large .chart-text {
+            font-size: 2.2em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout-container">
+        <div class="sidebar">
+            <a href="index.html" class="logo-link">
+                <img src="logoWellMate.jpg" alt="WellMate Logo">
+                <span>WellMate</span>
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#">
+                        <span class="nav-icon">📈</span>Beranda
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="active">
+                        <span class="nav-icon">💧</span>Tracking Minum
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <span class="nav-icon">🤸</span>Saran Aktivitas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <span class="nav-icon">📊</span>Laporan dan Analisis
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <span class="nav-icon">📰</span>Berita dan Edukasi
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <span class="nav-icon">👥</span>Teman
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <span class="nav-icon">⚙️</span>Pengaturan
+                    </a>
+                </li>
+            </ul>
+
+            <div class="logout-section">
+                <a href="#">
+                    <span class="nav-icon" style="margin-right: 15px;">🚪</span>Keluar
+                </a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="top-header">
+                <button class="icon-button">
+                    🔔 
+                    <span class="notification-badge">2</span> 
+                </button>
+                
+                <div class="profile-avatar" title="Foto Profil Anda">
+                    </div>
+            </div>
+            
+            <div class="hydra-summary-wrapper">
+                <div class="welcome-banner">
+                    <h1>Selamat Datang, Bree!</h1>
+                    <p>Mari jaga hidrasi tubuh Anda hari ini</p>
+                </div>
+                
+                <div class="summary-section">
+                    <div class="summary-cards" id="summary-cards">
+                        </div>
+                </div>
+            </div>
+            <div class="progress-section">
+                <div class="progress-header">
+                    <h3>Progress Hidrasi Hari Ini</h3>
+                    <a href="#" id="show-detail-btn" class="btn btn-sm" style="background: none; color: var(--biru-primary); border: 1px solid var(--biru-primary);">Lihat Detail</a>
+                </div>
+                
+                <div class="progress-chart-container">
+                    <div class="chart-visual" id="main-chart-visual">
+                        <div class="chart-text"><span id="progress-percentage">80%</span><small>Tercapai</small></div>
+                    </div>
+                </div>
+
+                <div class="progress-values">
+                    <div class="progress-item consumed">
+                        <span id="progress-consumed">2.05L</span>
+                        <span class="progress-item-label">Diminum Hari Ini</span>
+                    </div>
+                    <div class="progress-item remaining">
+                        <span id="progress-remaining">450ml</span>
+                        <span class="progress-item-label">Masih Perlu</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tracking-list-header">
+                <h3>Tracking Konsumsi Hari Ini</h3>
+                <button id="add-drink-btn" class="btn btn-sm" style="width: auto;">+ Tambah Minum</button>
+            </div>
+
+            <div class="tracking-list">
+                <div id="drink-list-container">
+                    </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="drink-form-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="form-title">Tambah Catatan Minum</h3>
+            <form id="drink-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label for="drink-type">Jenis Minuman</label>
+                    <select id="drink-type" required>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="drink-amount">Jumlah (ml)</label>
+                    <input type="number" id="drink-amount" placeholder="250" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="drink-time">Waktu</label>
+                    <input type="text" id="drink-time" placeholder="15:30" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content alert-modal-content">
+            <div class="alert-icon warning">!</div>
+            <p class="alert-message" id="confirm-message">Apakah Anda yakin ingin menghapus catatan ini?</p>
+            <div class="alert-actions">
+                <button class="btn btn-secondary" id="confirm-cancel">Batalkan</button>
+                <button class="btn btn-danger" id="confirm-yes">Ya</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="status-modal" class="modal">
+        <div class="modal-content alert-modal-content">
+            <div class="alert-icon success" id="status-icon">✓</div>
+            <p class="alert-message" id="status-message">Catatan Konsumsi Minuman Anda Berhasil Disimpan!</p>
+            <button class="btn btn-primary" id="status-ok">OK</button>
+        </div>
+    </div>
+    
+    <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="border-bottom: none;">Detail Konsumsi Hari Ini</h3>
+             <div class="progress-chart-container" style="flex-direction: column;">
+                <div class="chart-visual large" id="detail-chart-visual">
+                    <div class="chart-text"><span id="detail-progress-percentage">80%</span><small>Tercapai</small></div>
+                </div>
+                <ul class="detail-list" id="detail-list-breakdown">
+                    </ul>
+                <p class="detail-message">Kamu perlu minum <span id="detail-remaining-amount">450ml</span> lagi untuk mencapai target hidrasi hari ini. Semangat!</p>
+            </div>
+            <button class="btn btn-primary" id="detail-back-btn">Kembali</button>
+        </div>
+    </div>
+
+    <script>
+        const TARGET_HARIAN = 2500;
+        const JENIS_MINUMAN = [
+            { id: 1, nama: "Air Putih", ikon: "💧", warna: "var(--air)" },
+            { id: 2, nama: "Teh Hijau", ikon: "🍵", warna: "var(--teh)" },
+            { id: 3, nama: "Jus Buah", ikon: "🍊", warna: "var(--jus)" },
+            { id: 4, nama: "Kopi", ikon: "☕", warna: "var(--kopi)" },
+            { id: 5, nama: "Susu", ikon: "🥛", warna: "#F0E68C" },
+            { id: 6, nama: "Soda", ikon: "🥤", warna: "#87CEFA" },
+            { id: 7, nama: "Jamu", ikon: "🌿", warna: "#A0522D" },
+            { id: 8, nama: "Yogurt", ikon: "🥄", warna: "#FFDEAD" }
+        ];
+        
+        let catatanMinuman = [
+            { id: 1, jenis: "Teh Hijau", jumlah: 500, waktu: "10:15" },
+            { id: 2, jenis: "Air Putih", jumlah: 600, waktu: "12:00" },
+            { id: 3, jenis: "Air Putih", jumlah: 250, waktu: "14:30" },
+            { id: 4, jenis: "Jus Buah", jumlah: 450, waktu: "14:55" },
+            { id: 5, jenis: "Kopi", jumlah: 250, waktu: "16:30" },
+        ];
+        let idBerikutnya = 6;
+        let catatanOperasi = null; 
+        
+        function formatVolume(ml) {
+            if (ml >= 1000) {
+                return (ml / 1000).toFixed(2).replace(/\.?0+$/, '') + 'L';
+            }
+            return ml + 'ml';
+        }
+
+        function buatDonutChart(statistikMinuman, totalDiminum, ukuran = 150) {
+            const radius = ukuran / 2.5;
+            const keliling = 2 * Math.PI * radius;
+            let offsetSaatIni = 0;
+            let total = 0;
+            
+            for (const key in statistikMinuman) {
+                total += statistikMinuman[key].jumlah;
+            }
+            
+            const sisa = TARGET_HARIAN - total;
+            const dataChart = [];
+
+            for (const key in statistikMinuman) {
+                const persentase = (statistikMinuman[key].jumlah / TARGET_HARIAN) * 100;
+                dataChart.push({ persentase: persentase, warna: statistikMinuman[key].warna });
+            }
+
+            if (sisa > 0) {
+                const persentaseSisa = (sisa / TARGET_HARIAN) * 100;
+                dataChart.push({ persentase: persentaseSisa, warna: 'var(--sisa)' });
+            }
+            
+            const lingkaran = dataChart.map(data => {
+                const dashArray = `${(data.persentase / 100) * keliling} ${keliling}`;
+                const dashOffset = offsetSaatIni;
+                offsetSaatIni -= ((data.persentase / 100) * keliling);
+                
+                return `<circle class="donut-segment" cx="${ukuran / 2}" cy="${ukuran / 2}" r="${radius}" 
+                            fill="transparent" 
+                            stroke="${data.warna}" 
+                            stroke-width="25" 
+                            stroke-dasharray="${dashArray}" 
+                            stroke-dashoffset="${dashOffset}" />`;
+            }).join('');
+
+            return `<svg class="donut-chart" width="${ukuran}" height="${ukuran}" viewBox="0 0 ${ukuran} ${ukuran}">${lingkaran}</svg>`;
+        }
+        
+        function perbaruiSemuaUI() {
+            const totalDiminum = catatanMinuman.reduce((sum, record) => sum + record.jumlah, 0);
+            const sisa = Math.max(0, TARGET_HARIAN - totalDiminum);
+            
+            const sisaFormattedL = (sisa / 1000).toFixed(2).replace(/\.?0+$/, '') + 'L'; 
+            
+            const persentaseProgress = Math.min(100, (totalDiminum / TARGET_HARIAN) * 100);
+            
+            const statistikMinuman = {};
+            JENIS_MINUMAN.forEach(d => statistikMinuman[d.nama] = { jumlah: 0, warna: d.warna, persentase: 0 });
+            
+            catatanMinuman.forEach(record => {
+                if (statistikMinuman[record.jenis]) {
+                    statistikMinuman[record.jenis].jumlah += record.jumlah;
+                }
+            });
+            
+            let statistikUntukChart = {};
+            for (const jenis in statistikMinuman) {
+                if (statistikMinuman[jenis].jumlah > 0) {
+                    statistikMinuman[jenis].persentase = Math.round((statistikMinuman[jenis].jumlah / TARGET_HARIAN) * 100);
+                    statistikUntukChart[jenis] = statistikMinuman[jenis];
+                }
+            }
+
+            // 2. Update Summary Cards
+            document.getElementById('summary-cards').innerHTML = `
+                <div class="card-ringkasan">
+                    <div class="card-label">Target Harian</div>
+                    <div class="card-value">
+                        <span class="card-value-text">${formatVolume(TARGET_HARIAN)}</span>
+                        <div class="card-icon">🎯</div>
+                    </div>
+                    <div class="card-label">Capai target hidrasi Anda!</div>
+                </div>
+                <div class="card-ringkasan">
+                    <div class="card-label">Sudah diminum</div>
+                    <div class="card-value">
+                        <span class="card-value-text">${formatVolume(totalDiminum)}</span>
+                        <div class="card-icon">💧</div>
+                    </div>
+                    <div class="card-label">dari ${formatVolume(TARGET_HARIAN)}, target</div>
+                </div>
+                <div class="card-ringkasan">
+                    <div class="card-label">Sisa Target</div>
+                    <div class="card-value">
+                        <span class="card-value-text">${sisaFormattedL}</span> <div class="card-icon">⏳</div>
+                    </div>
+                    <div class="card-label">dari ${formatVolume(TARGET_HARIAN)}, target</div>
+                </div>
+                <div class="card-ringkasan">
+                    <div class="card-label">Progres</div>
+                    <div class="card-value">
+                        <span class="card-value-text">${Math.round(persentaseProgress)}%</span>
+                        <div class="card-icon">📈</div>
+                    </div>
+                    <div class="card-label">dari ${formatVolume(TARGET_HARIAN)}, target</div>
+                </div>
+            `;
+            
+            // 3. Update Progress Section
+            document.getElementById('progress-consumed').textContent = formatVolume(totalDiminum);
+            document.getElementById('progress-remaining').textContent = sisaFormattedL; // Menggunakan format L
+            document.getElementById('progress-percentage').textContent = `${Math.round(persentaseProgress)}%`;
+            
+            // 4. Update Main Donut Chart
+            document.getElementById('main-chart-visual').innerHTML = buatDonutChart(statistikUntukChart, totalDiminum) 
+                + `<div class="chart-text"><span id="progress-percentage">${Math.round(persentaseProgress)}%</span><small>Tercapai</small></div>`;
+
+            // 5. Update Detail Pop-up
+            document.getElementById('detail-progress-percentage').textContent = `${Math.round(persentaseProgress)}%`;
+            document.getElementById('detail-remaining-amount').textContent = sisaFormattedL; // Menggunakan format L
+            document.getElementById('detail-chart-visual').innerHTML = buatDonutChart(statistikUntukChart, totalDiminum, 200) 
+                + `<div class="chart-text"><span id="detail-progress-percentage">${Math.round(persentaseProgress)}%</span><small>Tercapai</small></div>`;
+
+            const breakdownHtml = Object.entries(statistikUntukChart).map(([jenis, data]) => `
+                <li class="detail-item">
+                    <div><span class="detail-color-box" style="background-color: ${data.warna};"></span>${jenis}</div>
+                    <strong>${data.persentase}% (${formatVolume(data.jumlah)})</strong>
+                </li>
+            `).join('');
+            document.getElementById('detail-list-breakdown').innerHTML = breakdownHtml;
+
+
+            // 6. Update Tracking List
+            const listKontainer = document.getElementById('drink-list-container');
+            const listHtml = catatanMinuman.map(record => {
+                const infoMinuman = JENIS_MINUMAN.find(d => d.nama === record.jenis) || { ikon: '❓', warna: 'var(--hitam-gelap)' };
+                return `
+                    <div class="tracking-item" data-id="${record.id}">
+                        <div class="tracking-icon" style="color: ${infoMinuman.warna};">${infoMinuman.ikon}</div>
+                        <div class="tracking-details">
+                            <strong>${record.jenis} - ${formatVolume(record.jumlah)}</strong>
+                            <div class="tracking-time">${record.waktu}</div>
+                        </div>
+                        <div class="tracking-actions">
+                            <button class="edit-btn" data-id="${record.id}"><span style="color: var(--biru-primary);">✎</span></button>
+                            <button class="delete-btn" data-id="${record.id}"><span style="color: #FF4500;">🗑️</span></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            listKontainer.innerHTML = listHtml;
+            pasangListenerList();
+        }
+        
+        function tampilkanModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function sembunyikanModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function resetForm() {
+            document.getElementById('drink-form').reset();
+            document.getElementById('edit-id').value = '';
+            document.getElementById('form-title').textContent = 'Tambah Catatan Minum';
+            document.getElementById('drink-type').value = 'Air Putih';
+            document.getElementById('drink-amount').placeholder = '250';
+            document.getElementById('drink-time').placeholder = '15:30';
+        }
+        
+        document.getElementById('drink-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('edit-id').value;
+            const jenis = document.getElementById('drink-type').value;
+            const jumlah = parseInt(document.getElementById('drink-amount').value);
+            const waktu = document.getElementById('drink-time').value;
+            
+            if (id) {
+                const index = catatanMinuman.findIndex(r => r.id == id);
+                if (index !== -1) {
+                    catatanMinuman[index] = { ...catatanMinuman[index], jenis, jumlah, waktu };
+                    document.getElementById('status-icon').textContent = '✓';
+                    document.getElementById('status-icon').className = 'alert-icon success';
+                    document.getElementById('status-message').textContent = 'Catatan Minuman Berhasil Diperbarui!';
+                } else {
+                    document.getElementById('status-icon').textContent = '✕';
+                    document.getElementById('status-icon').className = 'alert-icon danger';
+                    document.getElementById('status-message').textContent = 'Catatan Minuman Gagal Diperbarui!';
+                }
+            } else {
+                const catatanBaru = { id: idBerikutnya++, jenis, jumlah, waktu };
+                catatanMinuman.push(catatanBaru);
+                document.getElementById('status-icon').textContent = '✓';
+                document.getElementById('status-icon').className = 'alert-icon success';
+                document.getElementById('status-message').textContent = 'Catatan Konsumsi Minuman Anda Berhasil Disimpan!';
+            }
+            
+            sembunyikanModal('drink-form-modal');
+            tampilkanModal('status-modal');
+            resetForm();
+            perbaruiSemuaUI();
+        });
+
+        document.getElementById('add-drink-btn').addEventListener('click', function() {
+            resetForm();
+            tampilkanModal('drink-form-modal');
+        });
+        
+        document.getElementById('show-detail-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            tampilkanModal('detail-modal');
+        });
+        
+        document.getElementById('detail-back-btn').addEventListener('click', function() {
+            sembunyikanModal('detail-modal');
+        });
+        
+        document.getElementById('status-ok').addEventListener('click', function() {
+            sembunyikanModal('status-modal');
+        });
+
+        document.getElementById('confirm-cancel').addEventListener('click', function() {
+            sembunyikanModal('confirm-modal');
+            catatanOperasi = null;
+        });
+
+        document.getElementById('confirm-yes').addEventListener('click', function() {
+            sembunyikanModal('confirm-modal');
+            
+            const operasi = document.getElementById('confirm-yes').dataset.operation;
+            
+            if (operasi === 'delete' && catatanOperasi) {
+                const panjangAwal = catatanMinuman.length;
+                catatanMinuman = catatanMinuman.filter(r => r.id !== catatanOperasi.id);
+                
+                if (catatanMinuman.length < panjangAwal) {
+                    document.getElementById('status-icon').textContent = '✓';
+                    document.getElementById('status-icon').className = 'alert-icon success';
+                    document.getElementById('status-message').textContent = 'Catatan Minuman Berhasil Dihapus!';
+                } else {
+                    document.getElementById('status-icon').textContent = '✕';
+                    document.getElementById('status-icon').className = 'alert-icon danger';
+                    document.getElementById('status-message').textContent = 'Catatan Minuman Gagal Dihapus!';
+                }
+                tampilkanModal('status-modal');
+                perbaruiSemuaUI();
+            } else if (operasi === 'update' && catatanOperasi) {
+                document.getElementById('form-title').textContent = 'Perbarui Catatan Minum';
+                document.getElementById('edit-id').value = catatanOperasi.id;
+                document.getElementById('drink-type').value = catatanOperasi.jenis;
+                document.getElementById('drink-amount').value = catatanOperasi.jumlah;
+                document.getElementById('drink-time').value = catatanOperasi.waktu;
+                tampilkanModal('drink-form-modal');
+            }
+            catatanOperasi = null;
+        });
+        
+        function pasangListenerList() {
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.dataset.id);
+                    catatanOperasi = catatanMinuman.find(r => r.id === id);
+                    
+                    document.getElementById('confirm-message').textContent = 'Apakah Anda yakin ingin memperbarui catatan ini?';
+                    document.getElementById('confirm-yes').dataset.operation = 'update';
+                    document.getElementById('confirm-yes').classList.remove('btn-danger');
+                    document.getElementById('confirm-yes').classList.add('btn-primary');
+                    tampilkanModal('confirm-modal');
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.dataset.id);
+                    catatanOperasi = catatanMinuman.find(r => r.id === id);
+                    
+                    document.getElementById('confirm-message').textContent = 'Apakah Anda yakin ingin menghapus catatan ini?';
+                    document.getElementById('confirm-yes').dataset.operation = 'delete';
+                    document.getElementById('confirm-yes').classList.remove('btn-primary');
+                    document.getElementById('confirm-yes').classList.add('btn-danger');
+                    tampilkanModal('confirm-modal');
+                });
+            });
+        }
+        
+        function isiDropdownMinuman() {
+            const select = document.getElementById('drink-type');
+            select.innerHTML = JENIS_MINUMAN.map(d => `<option value="${d.nama}">${d.nama}</option>`).join('');
+        }
+        
+        function init() {
+            isiDropdownMinuman();
+            perbaruiSemuaUI();
+            resetForm(); 
+        }
+        
+        init();
+    </script>
+</body>
+</html>

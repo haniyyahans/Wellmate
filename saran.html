@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WellMate - Saran Aktivitas</title>
+    <style>
+        /* Color Palette */
+        :root {
+            --biru-primary: #3478F5; 
+            --biru-muda: #C6E2FF; 
+            --hitam-gelap: #151515;
+            --putih: #FFFFFF;
+            --abu-terang: #F8F8F8;
+            --abu-medium: #AAAAAA;
+            --sukses: #34C759;
+            --warning: #FF9500;
+        }
+
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--abu-terang);
+            color: #333; 
+            font-weight: 400; 
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--putih);
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar h2 {
+            padding: 0 20px;
+            margin-top: 0;
+            color: var(--biru-primary);
+            margin-bottom: 25px; 
+        }
+
+        .logo-link {
+            margin-top: -50px;
+            margin-bottom: -25px;  
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo-link img {
+            height: 140px; 
+            margin-right: -40px;
+            margin-left: -32px;
+        }
+
+        .logo-link span {
+            font-size: 1.4em; 
+            color: var(--hitam-gelap);
+            font-weight: bold;
+            padding-bottom: 15px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin-top: -10px;
+            flex-grow: 1; 
+        }
+
+        .nav-item {
+            padding: 0;
+            margin-bottom: 5px; 
+        }
+
+        .sidebar a {
+            display: flex; 
+            align-items: center;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333; 
+            font-weight: 500;
+            border-left: 5px solid transparent;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a.active {
+            background-color: var(--biru-muda);
+            border-left-color: var(--biru-primary);
+            color: var(--biru-primary);
+        }
+
+        .nav-icon {
+            margin-right: 15px;
+            font-size: 1.1em;
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout-section {
+            padding: 20px 0 0 0;
+            border-top: 1px solid #EEE;
+        }
+
+        .logout-section a {
+            color: #333; 
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px 0; /* Padding atas dan bawah 30px, kiri dan kanan 0 */
+            background-color: var(--abu-terang);
+        }
+
+        /* Top Header Styles */
+        .top-header {
+            display: flex;
+            justify-content: flex-end; 
+            align-items: center;
+            
+            /* padding horizontal 30px */
+            padding: 0 30px 15px 30px; 
+            
+            border-bottom: 1px solid #E0E0E0; 
+            margin-bottom: 20px; 
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em; 
+            color: var(--biru-primary); 
+            margin-left: 20px;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-image: url('fotoProfil.jpg'); 
+            background-size: cover;
+            background-position: center;
+            border: 2px solid var(--putih); 
+            box-shadow: 0 0 0 2px var(--biru-primary);
+            margin-left: 20px;
+            cursor: pointer;
+            flex-shrink: 0; 
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0px; 
+            right: 0px; 
+            width: 16px; 
+            height: 16px;
+            background-color: #FF4500; 
+            border-radius: 50%;
+            border: 2px solid var(--abu-terang); 
+            color: var(--putih);
+            font-size: 0.65em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            line-height: 1; 
+        }
+
+        /* Wrapper untuk area Banner, Summary, dan Rekomendasi */
+        .dashboard-content-area {
+            padding: 0 30px; 
+            margin: 0; 
+            border-radius: 12px;
+            overflow: hidden; 
+            background-color: transparent; 
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background-color: var(--biru-primary);
+            color: var(--putih);
+            padding: 20px; /* Padding internal */
+            border-radius: 12px 12px 0 0; 
+            margin-bottom: 0;
+        }
+        
+        .welcome-banner h1 {
+            margin: 0 0 5px 0;
+            font-size: 1.8em;
+        }
+        
+        /* Summary Cards Section */
+        .summary-section {
+            background-color: transparent; 
+            padding: 20px 0; /* Padding internal */
+            margin-bottom: 0; 
+        }
+
+        .summary-cards {
+            display: flex;
+            gap: 15px; 
+            justify-content: space-between;
+        }
+
+        .card-ringkasan {
+            background-color: var(--putih); 
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            font-size: 0.9em;
+        }
+        
+        .card-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--biru-primary);
+            margin: 5px 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-icon {
+            width: 30px;
+            height: 30px;
+            background-color: var(--biru-muda);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--biru-primary);
+            font-size: 1em;
+        }
+        
+        .card-label {
+            font-size: 0.85em;
+            color: var(--abu-medium);
+            line-height: 1.3;
+        }
+        
+        /* STYLES BAGIAN SARAN */
+    
+        /* Recommendation Box Area */
+        .recommendation-area {
+            background-color: transparent; 
+            padding: 0 0 30px 0; /* Padding internal */
+            margin-bottom: 0; 
+        }
+        
+        .recommendation-box {
+            background-color: var(--putih);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin: 0; 
+        }
+
+        .recommendation-box h3 {
+            margin-top: 0;
+            color: var(--hitam-gelap);
+            border-bottom: 1px solid var(--abu-terang);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 15px;
+        }
+
+        .activity-card {
+            background-color: var(--putih);
+            border: 1px solid #EEE;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.2s;
+            cursor: pointer; 
+        }
+
+        .activity-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-card strong {
+            display: block;
+            font-size: 1.0em; 
+            margin-bottom: 5px;
+            font-weight: 500; 
+            color: #333; 
+        }
+
+        .activity-card span.icon {
+            margin-right: 8px;
+            color: var(--biru-primary);
+        }
+
+        .activity-card a {
+            font-size: 0.85em;
+            color: var(--biru-primary);
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+            visibility: visible !important; 
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); 
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--putih);
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .modal-content h3 {
+            margin-top: 0;
+            color: #333; 
+            font-size: 1.4em;
+            margin-bottom: 5px;
+        }
+        
+        .modal-content p.activity-title {
+            color: var(--biru-primary);
+            margin-bottom: 15px;
+            font-weight: 500; 
+        }
+        
+        .modal-content p.description {
+            font-size: 0.95em;
+            color: #555; 
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+        
+        .modal-content p.amount {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--biru-primary);
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+        }
+        
+        .btn-primary {
+            background-color: var(--biru-primary);
+            color: var(--putih);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout-container">
+        <div class="sidebar">
+            <a href="index.html" class="logo-link">
+                <img src="logoWellMate.jpg" alt="WellMate Logo">
+                <span>WellMate</span>
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html"><span class="nav-icon">📈</span>Beranda</a></li>
+                <li class="nav-item"><a href="tracking.html"><span class="nav-icon">💧</span>Tracking Minum</a></li>
+                <li class="nav-item"><a href="saran.html" class="active"><span class="nav-icon">🤸</span>Saran Aktivitas</a></li>
+                <li class="nav-item"><a href="index.html"><span class="nav-icon">📊</span>Laporan dan Analisis</a></li>
+                <li class="nav-item"><a href="index.html"><span class="nav-icon">📰</span>Berita dan Edukasi</a></li>
+                <li class="nav-item"><a href="index.html"><span class="nav-icon">👥</span>Teman</a></li>
+                <li class="nav-item"><a href="index.html"><span class="nav-icon">⚙️</span>Pengaturan</a></li>
+            </ul>
+            <div class="logout-section"><a href="index.html"><span class="nav-icon" style="margin-right: 15px;">🚪</span>Keluar</a></div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="top-header">
+                <button class="icon-button">
+                    🔔 
+                    <span class="notification-badge">2</span> 
+                </button>
+                <div class="profile-avatar" title="Foto Profil Anda"></div>
+            </div>
+            
+            <div class="dashboard-content-area">
+                
+                <div class="welcome-banner" style="border-radius: 12px 12px 0 0; margin-bottom: 0;">
+                    <h1>Saran Aktivitas dan Cairan</h1>
+                    <p>Lihat kebutuhan hidrasi ekstra Anda berdasarkan aktivitas fisik.</p>
+                </div>
+                
+                <div class="summary-section">
+                    <div class="summary-cards">
+                        <div class="card-ringkasan"><div class="card-label">Target Harian</div><div class="card-value"><span class="card-value-text">2.5L</span><div class="card-icon">🎯</div></div><div class="card-label">Capai target hidrasi Anda!</div></div>
+                        <div class="card-ringkasan"><div class="card-label">Sudah diminum</div><div class="card-value"><span class="card-value-text">2.05L</span><div class="card-icon">💧</div></div><div class="card-label">dari 2.5L, target</div></div>
+                        <div class="card-ringkasan"><div class="card-label">Sisa Target</div><div class="card-value"><span class="card-value-text">0.45L</span><div class="card-icon">⏳</div></div><div class="card-label">dari 2.5L, target</div></div>
+                        <div class="card-ringkasan"><div class="card-label">Progres</div><div class="card-value"><span class="card-value-text">80%</span><div class="card-icon">📈</div></div><div class="card-label">dari 2.5L, target</div></div>
+                    </div>
+                </div>
+
+                <div class="recommendation-area">
+                    <div class="recommendation-box" style="border-radius: 0 0 12px 12px;">
+                        <h3>Rekomendasi Cairan Tambahan untuk Aktivitas Fisik</h3>
+                        
+                        <div class="recommendation-grid" id="recommendation-grid">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="detail-saran-modal" class="modal">
+        <div class="modal-content">
+            <h3>Rekomendasi Cairan Tambahan</h3>
+            <p class="activity-title" id="modal-activity-title">Aktivitas: Lari 30-60 menit</p>
+            <p class="description" id="modal-description">
+                Aktivitas kardio yang meningkatkan detak jantung dan membuat tubuh cepat kehilangan cairan melalui keringat.
+            </p>
+            <p class="amount" id="modal-amount">±400 ml</p>
+            <button class="btn btn-primary" id="modal-ok-btn">OK</button>
+        </div>
+    </div>
+
+    <script>
+        const DATA_AKTIVITAS = [
+            {
+                nama: "Lari 30-60 menit", ikon: "🏃", cairan: "±400 ml",
+                deskripsi: "Aktivitas kardio yang meningkatkan detak jantung dan membuat tubuh cepat kehilangan cairan melalui keringat. Sangat disarankan untuk minum sebelum, selama, dan setelah lari."
+            },
+            {
+                nama: "Gym 1 jam", ikon: "🏋️", cairan: "±500 ml",
+                deskripsi: "Latihan beban dan kardio intens dalam ruangan yang meningkatkan suhu tubuh. Kehilangan keringat tinggi. Pastikan asupan cairan untuk menjaga performa."
+            },
+            {
+                nama: "Angkat Beban 45-60 menit", ikon: "💪", cairan: "±300 ml",
+                deskripsi: "Meskipun tidak seintensif kardio, angkat beban tetap menyebabkan kehilangan cairan. Minum secara teratur antar set untuk menjaga fokus dan energi."
+            },
+            {
+                nama: "Bersepeda 45 menit", ikon: "🚴", cairan: "±450 ml",
+                deskripsi: "Bersepeda, terutama di luar ruangan, membutuhkan asupan cairan yang konsisten. Kebutuhan cairan bisa lebih tinggi jika cuaca panas."
+            },
+            {
+                nama: "Kerja Fisik", ikon: "👷", cairan: "±600 ml",
+                deskripsi: "Bekerja di luar atau di lingkungan panas/lembab memerlukan perhatian ekstra pada hidrasi. Disarankan minum setiap 20-30 menit kerja."
+            },
+            {
+                nama: "Aerobik atau Zumba 45 menit", ikon: "💃", cairan: "±350 ml",
+                deskripsi: "Aktivitas grup yang energik dan bergerak cepat. Kehilangan cairan terjadi secara cepat. Jaga botol air di dekat Anda."
+            },
+            {
+                nama: "Mendaki 2-4 jam", ikon: "⛰️", cairan: "±1.5 L",
+                deskripsi: "Aktivitas yang berlangsung lama dan sering di lingkungan yang menantang (pulau/dataran tinggi). Wajib membawa cairan yang cukup dan elektrolit."
+            },
+            {
+                nama: "Olahraga 1-2 jam", ikon: "⚽", cairan: "±750 ml",
+                deskripsi: "Aktivitas olahraga tim (sepak bola, basket) yang memerlukan gerakan sporadis intens. Konsumsi cairan di waktu istirahat sangat penting."
+            },
+            {
+                nama: "Lainnya", ikon: "✨", cairan: "±250 ml",
+                deskripsi: "Untuk aktivitas ringan atau durasi yang lebih singkat, tambahan 250ml sudah cukup. Sesuaikan dengan rasa haus Anda."
+            }
+        ];
+
+        function tampilkanModal(data) {
+            document.getElementById('modal-activity-title').textContent = `Aktivitas: ${data.nama}`;
+            document.getElementById('modal-description').textContent = data.deskripsi;
+            document.getElementById('modal-amount').textContent = data.cairan;
+            document.getElementById('detail-saran-modal').classList.add('active');
+        }
+
+        function sembunyikanModal() {
+            document.getElementById('detail-saran-modal').classList.remove('active');
+        }
+
+        function renderActivityCards() {
+            const grid = document.getElementById('recommendation-grid');
+            grid.innerHTML = DATA_AKTIVITAS.map((data, index) => `
+                <div class="activity-card" data-index="${index}">
+                    <strong><span class="icon">${data.ikon}</span>${data.nama}</strong>
+                    <a href="#" class="show-detail-saran">Lihat Selengkapnya...</a>
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.activity-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (e.target.tagName !== 'A') {
+                        const index = parseInt(this.dataset.index);
+                        tampilkanModal(DATA_AKTIVITAS[index]);
+                    }
+                });
+                
+                card.querySelector('.show-detail-saran').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const index = parseInt(this.closest('.activity-card').dataset.index);
+                    tampilkanModal(DATA_AKTIVITAS[index]);
+                });
+            });
+        }
+        
+        document.getElementById('modal-ok-btn').addEventListener('click', sembunyikanModal);
+
+        document.getElementById('detail-saran-modal').addEventListener('click', function(e) {
+            if (e.target.id === 'detail-saran-modal') {
+                sembunyikanModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', renderActivityCards);
+
+    </script>
+</body>
+</html>
