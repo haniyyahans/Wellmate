@@ -3,195 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WellMate - Beranda</title>
+    <title>WellMate Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Konfigurasi khusus Tailwind
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'wellmate-blue': '#4c86e0', // Biru utama (Tombol, Sidebar Aktif)
-                        'wellmate-light-blue': '#e1f0ff', // Biru muda untuk background
-                        'button-red' :'#FFF7ED', //merah muda
-                        'sidebar-active-bg': '#eef4ff', // Background item sidebar aktif
-                        'primary-text': '#1f2937', // Teks utama (abu-abu gelap)
-                        'secondary-text': '#6b7280', // Teks sekunder (abu-abu sedang)
-                        'progress-orange': '#f97316', // Warna oranye untuk progress bar
-                        'progress-green': '#10b981', // Warna hijau
-                        'progress-teal': '#14b8a6', // Warna teal/tosca
+                        'wellmate-blue': '#3B82F6',
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="font-sans">
-
-    <div class="flex min-h-screen bg-wellmate-light-blue">
-
-        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col justify-between p-4">
-            <div>
-                <div class="flex items-center p-2 mb-6">
-                    <img 
-                    src="images/logoWellmate.jpg" class="w-6 h-8" alt="WellMate Logo">
-                    <h1 class="text-xl font-semibold text-gray-800">WellMate</h1>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg flex flex-col">
+            <!-- Logo -->
+            <div class="p-5 border-b">
+                <div class="flex items-center space-x-2">
+                    <img src="images/logoWellmate.jpg" class="w-6 h-8" alt="WellMate Logo">
+                    <span class="text-2xl font-bold text-gray-800">WellMate</span>
                 </div>
-
-                <nav class="space-y-1 text-sm">
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg bg-sidebar-active-bg text-wellmate-blue font-semibold transition duration-150">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                        Beranda
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-secondary-text hover:bg-gray-100 transition duration-150">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22a7 7 0 007-7c0-3.866-7-14-7-14S5 11.134 5 15a7 7 0 007 7z"></path></svg>
-                        Tracking Minum
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-secondary-text hover:bg-gray-100 transition duration-150">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        Saran Aktivitas
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-secondary-text hover:bg-gray-100 transition duration-150">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l-2 2m6 11V6l2 2m-8 11h6m-3 0h6m-9-4h6m-3 0h6"></path></svg>
-                        Laporan dan Analisis
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-secondary-text hover:bg-gray-100 transition duration-150">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.207 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.793 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.793 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.207 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
-                        Berita dan Edukasi
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-secondary-text hover:bg-gray-100 transition duration-150">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-3H4v3h5M4 7V4h5l1 1h4l1-1h5v3H4z"></path></svg>
-                        Teman
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-secondary-text hover:bg-gray-100 transition duration-150">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Pengaturan
-                    </a>
-                </nav>
             </div>
 
-            <a href="#" class="flex items-center p-4 text-secondary-text hover:text-primary-text transition duration-150 text-sm">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                Keluar
-            </a>
+            <!-- Menu -->
+            <nav class="flex-1 p-4 space-y-2">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    <span class="font-medium">Beranda</span>
+                </a>
+
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Tracking Minum</span>
+                </a>
+
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    <span>Saran Aktivitas</span>
+                </a>
+
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    <span>Laporan dan Analisis</span>
+                </a>
+
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    <span>Berita dan Edukasi</span>
+                </a>
+
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span>Teman</span>
+                </a>
+
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span>Pengaturan</span>
+                </a>
+            </nav>
+
+            <!-- Logout -->
+            <div class="p-3 border-t">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                    <span>Keluar</span>
+                </a>
+            </div>
         </aside>
 
-        <main class="flex-1 p-6">
-            <header class="flex justify-end items-center mb-6 space-x-4 bg-white p-4 w-full">
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="flex justify-end items-center space-x-4 bg-white p-4 shadow-sm">
                 <div class="relative cursor-pointer">
-                    <svg class="w-6 h-6 text-gray-500 hover:text-gray-700 transition duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                    <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">
-                        99+
-                    </span>
+                    <svg class="w-6 h-6 text-blue-500 hover:text-blue-700 transition duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">9</span>
                 </div>
-                <div class="relative w-8 h-8 rounded-full border-2 border-gray-400 flex items-center justify-center cursor-pointer hover:border-wellmate-blue transition duration-150">
-                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <div class="relative w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:border-blue-500 transition duration-150 overflow-hidden bg-gray-100">
+                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
                 </div>
             </header>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <h2 class="text-lg font-semibold text-primary-text mb-4">Progress Hidrasi Hari Ini</h2>
-                            <div class="flex flex-col items-center space-y-6"> 
-        
-                                <div class="relative w-40 h-40 flex items-center justify-center">
-                                    <div class="absolute w-full h-full rounded-full" 
-                                        style="background: conic-gradient(
-                                            #f97316 0%, 
-                                            #f97316 28%, 
-                                            #10b981 28%, 
-                                            #10b981 50%, 
-                                            #14b8a6 50%, 
-                                            #14b8a6 72%, 
-                                            #e5e7eb 72%
-                                            );
-                                            clip-path: circle(50%);">
-                                    </div>
-                                    
-                                    <div class="absolute w-32 h-32 rounded-full bg-white flex flex-col items-center justify-center">
-                                        <span class="text-3xl font-bold text-wellmate-blue">72%</span>
-                                        <span class="text-xs text-secondary-text">Tercapai</span>
-                                    </div>
-                                </div>
-        
-                                <div class="flex space-x-4 w-full justify-center"> 
-                                    
-                                    <div class="p-3 bg-wellmate-light-blue rounded-lg text-center flex-1 max-w-[150px]"> 
-                                        <span class="text-sm text-secondary-text block">Diminum Hari Ini</span>
-                                        <span class="text-xl font-bold text-wellmate-blue">1.8L</span>
-                                    </div>
-                                    
-                                    <div class="p-3 bg-button-red rounded-lg text-center flex-1 max-w-[150px]">
-                                        <span class="text-sm text-secondary-text block">Masih Perlu</span>
-                                        <span class="text-xl font-bold text-progress-orange">700ml</span>
-                                    </div>
-                                </div>
-        
-                            </div>
-                    </div>
 
-                    <div class="bg-white p-4 rounded-xl shadow border-l-4 border-wellmate-blue text-center">
-                        <p class="text-primary-text font-medium">
-                            Wow, target pencapaianmu tinggal 28% lagi, ayo tingkatkan agar sempurna dengan target!!!
-                        </p>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-xl shadow">
-                        <h2 class="text-lg font-semibold text-primary-text mb-4">Berita terkini</h2>
-
-                        <div class="border-b border-gray-100 py-3 cursor-pointer hover:bg-gray-50 -mx-6 px-6">
-                            <p class="font-medium text-sm text-primary-text">"Mengapa Air Putih Menjadi Kunci Utama Kesehatan Tubuh?"</p>
-                            <span class="text-xs text-secondary-text">Kategori: Kesehatan dan Hidrasi</span>
-                        </div>
+            <!-- Content Area -->
+            <main class="flex-1 overflow-y-auto bg-blue-50 p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Progress Hidrasi -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6">Progress Hidrasi Hari Ini</h2>
                         
-                        <div class="border-b border-gray-100 py-3 cursor-pointer hover:bg-gray-50 -mx-6 px-6">
-                            <p class="font-medium text-sm text-primary-text">"Berapa Banyak Air yang Ideal Diminum Setiap Hari?"</p>
-                            <span class="text-xs text-secondary-text">Kategori: Edukasi dan Gaya Hidup</span>
+                        <!-- Chart Placeholder -->
+                        <div class="flex justify-center items-center mb-6">
+                            <div class="relative w-64 h-64">
+                                <svg class="transform -rotate-90 w-64 h-64">
+                                    <circle cx="128" cy="128" r="100" stroke="#E5E7EB" stroke-width="24" fill="none"/>
+                                    <circle cx="128" cy="128" r="100" stroke="#3B82F6" stroke-width="24" fill="none" stroke-dasharray="628" stroke-dashoffset="176" />
+                                    <circle cx="128" cy="128" r="100" stroke="#F59E0B" stroke-width="24" fill="none" stroke-dasharray="628" stroke-dashoffset="440" />
+                                    <circle cx="128" cy="128" r="100" stroke="#10B981" stroke-width="24" fill="none" stroke-dasharray="628" stroke-dashoffset="565" />
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-5xl font-bold text-blue-600">72%</span>
+                                    <span class="text-gray-500">Tercapai</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="py-3 cursor-pointer hover:bg-gray-50 -mx-6 px-6">
-                            <p class="font-medium text-sm text-primary-text">"Dampak Dehidrasi Ringan terhadap Konsentrasi dan Produktivitas"</p>
-                            <span class="text-xs text-secondary-text">Kategori: Kesehatan dan Hidrasi</span>
+                        <!-- Stats -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center bg-blue-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Diminum Hari Ini</p>
+                                <p class="text-2xl font-bold text-blue-600">1.8L</p>
+                            </div>
+                            <div class="text-center bg-red-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Masih Perlu</p>
+                                <p class="text-2xl font-bold text-orange-500">700ml</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="lg:col-span-1 space-y-6">
-                    <div class="bg-white p-6 rounded-xl shadow">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-lg font-semibold text-primary-text">Biodata Pengguna</h2>
-                            <button class="flex items-center px-4 py-2 bg-wellmate-blue text-white text-sm font-medium rounded-lg shadow-md hover:bg-wellmate-blue/90 transition duration-150">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                Edit
-                            </button>
-                        </div>
-
+                    <!-- Berita Terkini -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Berita terkini</h2>
                         <div class="space-y-4">
-                            <div>
-                                <p class="text-sm text-secondary-text">Nama</p>
-                                <p class="text-primary-text font-medium">Bree</p>
+                            <div class="border-l-4 border-blue-500 pl-4 py-2">
+                                <p class="font-semibold text-gray-800 mb-1">"Mengapa Air Putih Menjadi Kunci Utama Kesehatan Tubuh?"</p>
+                                <p class="text-sm text-gray-500">Kategori : Kesehatan dan hidrasi</p>
                             </div>
-                            
-                            <div>
-                                <p class="text-sm text-secondary-text">Usia</p>
-                                <p class="text-primary-text font-medium">18</p>
+                            <div class="border-l-4 border-blue-500 pl-4 py-2">
+                                <p class="font-semibold text-gray-800 mb-1">"Berapa Banyak Air yang Ideal Diminum Setiap Hari?"</p>
+                                <p class="text-sm text-gray-500">Kategori : Edukasi dan fakta sains</p>
                             </div>
-
-                            <div>
-                                <p class="text-sm text-secondary-text">Berat Badan</p>
-                                <p class="text-primary-text font-medium">25 kg</p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm text-secondary-text">Email</p>
-                                <p class="text-primary-text font-medium">Bree123@gmail.com</p>
+                            <div class="border-l-4 border-blue-500 pl-4 py-2">
+                                <p class="font-semibold text-gray-800 mb-1">"Dampak Dehidrasi Ringan terhadap Konsentrasi dan Produktivitas"</p>
+                                <p class="text-sm text-gray-500">Kategori : Kesehatan dan hidrasi</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
+
+                <!-- Motivational Message -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6 text-center">
+                    <p class="text-lg text-gray-700">
+                        <span class="font-semibold">Wow, target pencapaianmu tinggal 28% lagi, ayo tingkatkan agar sempurna dengan target!</span>
+                    </p>
+                </div>
+
+                <!-- Biodata Pengguna -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Biodata Pengguna</h2>
+                        <button onclick="openModal()" class="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-150">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                            <span>Edit</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div>
+                            <p class="text-sm text-gray-500 mb-1">Nama</p>
+                            <p class="font-semibold text-gray-800 biodata-nama">Bree</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 mb-1">Usia</p>
+                            <p class="font-semibold text-gray-800 biodata-usia">18</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 mb-1">Berat Badan</p>
+                            <p class="font-semibold text-gray-800 biodata-berat">25 kg</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 mb-1">Email</p>
+                            <p class="font-semibold text-gray-800 biodata-email">Bree123@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
 
+    <!-- Modal Overlay -->
+    <div id="modalOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"></div>
+
+    <!-- Modal Pop-up Biodata -->
+    <div id="biodataModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+            <!-- Header -->
+            <div class="p-6 border-b">
+                <h2 class="text-xl font-bold text-gray-800">Biodata Pengguna</h2>
+            </div>
+
+            <!-- Form -->
+            <form class="p-6 space-y-4">
+                <!-- Nama -->
+                <div>
+                    <label for="nama" class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
+                    <input 
+                        type="text" 
+                        id="nama" 
+                        value="Bree"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-150"
+                    >
+                </div>
+
+                <!-- Usia -->
+                <div>
+                    <label for="usia" class="block text-sm font-medium text-gray-700 mb-2">Usia</label>
+                    <input 
+                        type="number" 
+                        id="usia" 
+                        value="18"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-150"
+                    >
+                </div>
+
+                <!-- Berat Badan -->
+                <div>
+                    <label for="beratBadan" class="block text-sm font-medium text-gray-700 mb-2">Berat Badan</label>
+                    <input 
+                        type="number" 
+                        id="beratBadan" 
+                        value="25"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-150"
+                    >
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        value="Bree123@gmail.com"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-150"
+                    >
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    type="submit"
+                    onclick="submitForm(event)"
+                    class="w-full py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition duration-150 flex items-center justify-center space-x-2"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span>Simpan</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            const modal = document.getElementById('biodataModal');
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalContent');
+            
+            modal.classList.remove('hidden');
+            overlay.classList.remove('hidden');
+            
+            // Trigger animation
+            setTimeout(() => {
+                overlay.classList.add('opacity-100');
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('biodataModal');
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalContent');
+            
+            overlay.classList.remove('opacity-100');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            
+            const nama = document.getElementById('nama').value;
+            const usia = document.getElementById('usia').value;
+            const beratBadan = document.getElementById('beratBadan').value;
+            const email = document.getElementById('email').value;
+            
+            // Update biodata display
+            document.querySelectorAll('.biodata-nama').forEach(el => el.textContent = nama);
+            document.querySelectorAll('.biodata-usia').forEach(el => el.textContent = usia);
+            document.querySelectorAll('.biodata-berat').forEach(el => el.textContent = beratBadan + ' kg');
+            document.querySelectorAll('.biodata-email').forEach(el => el.textContent = email);
+            
+            console.log('Data updated:', { nama, usia, beratBadan, email });
+            
+            closeModal();
+        }
+
+        // Close modal when clicking overlay
+        document.getElementById('modalOverlay').addEventListener('click', closeModal);
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>
