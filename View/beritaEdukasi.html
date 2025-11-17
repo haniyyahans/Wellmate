@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WellMate - Berita dan Edukasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg">
+            <!-- Logo -->
+            <div class="p-6">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center">
+                        <!-- <img src="assets/logo/wellmate-logo.png" alt="WellMate Logo" class="w-full h-full object-cover"> -->
+                    </div>
+                    <span class="text-2xl font-bold text-gray-800">WellMate</span>
+                </div>
+            </div>
+
+            <!-- Menu Navigation -->
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Beranda</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                            <i class="fas fa-glass-water"></i>
+                            <span>Tracking Minum</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                            <i class="fas fa-running"></i>
+                            <span>Saran Aktivitas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Laporan dan Analisis</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-3 px-4 py-3 bg-blue-50 text-[#2563EB] rounded-lg transition">
+                            <i class="fas fa-newspaper"></i>
+                            <span>Berita dan Edukasi</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="lihatTeman.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                            <i class="fas fa-users"></i>
+                            <span>Teman</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                            <i class="fas fa-cog"></i>
+                            <span>Pengaturan</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Logout Button -->
+            <div class="absolute bottom-6 left-4 right-4">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Keluar</span>
+                </a>
+            </div>
+        </aside>
+
+<!--ISI-->
+        <main class="flex-1 p-8 bg-blue-200 mt-20"> <!--warna backgroun biru-->
+            <!-- Header -->
+            <header class="w-[83.9%] bg-white shadow p-2 fixed top-0 right-0 z-[999]"> <!--kotak header putih-->
+            <div class="flex justify-end items-center mb-8 gap-4">
+                <div class="relative"> <!--notif-->
+                    <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                    </svg>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">9</span>
+                </div>
+                <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden"> <!--profil-->
+                    <img src="https://via.placeholder.com/40" alt="Profile" class="w-full h-full object-cover">
+                </div>
+            </div>
+            </header>
+
+<!--KOLOM PENCARIAN-->
+            <div class="mb-6">
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        placeholder="Cari" 
+                        class="w-full bg-blue-500 text-white placeholder-white px-6 py-4 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        id="searchInput"
+                        onkeyup="filterArticles()"
+                    >
+                    <!-- <svg class="absolute left-6 top-1/2 transform -translate-y-1/2 w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg> -->
+                </div>
+            </div>
+
+<!--KATEGORI-->
+            <div class="flex gap-3 mb-6 overflow-x-auto pb-2">
+                <button onclick="filterCategory('all')" class="category-btn bg-white text-blue-600 px-6 py-2 rounded-full font-medium hover:bg-blue-100 transition whitespace-nowrap active">
+                    Semua
+                </button>
+                <button onclick="filterCategory('kesehatan')" class="category-btn bg-white text-blue-600 px-6 py-2 rounded-full font-medium hover:bg-blue-100 transition whitespace-nowrap">
+                    Kesehatan dan Hidrasi
+                </button>
+                <button onclick="filterCategory('nutrisi')" class="category-btn bg-white text-blue-600 px-6 py-2 rounded-full font-medium hover:bg-blue-100 transition whitespace-nowrap">
+                    Nutrisi dan Gaya Hidup Sehat
+                </button>
+                <button onclick="filterCategory('teknologi')" class="category-btn bg-white text-blue-600 px-6 py-2 rounded-full font-medium hover:bg-blue-100 transition whitespace-nowrap">
+                    Teknologi & Kesehatan Digital
+                </button>
+                <button onclick="filterCategory('edukasi')" class="category-btn bg-white text-blue-600 px-6 py-2 rounded-full font-medium hover:bg-blue-100 transition whitespace-nowrap">
+                    Edukasi dan Fakta Sains
+                </button>
+            </div>
+
+<!--LIST ARTIKEL-->
+            <div id="articlesList" class="space-y-4">
+                <!--artikel 1-->
+                <div class="article-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer" data-category="kesehatan" onclick="showArticleDetail(1)">
+                    <h3 class="text-lg text-[#4B5563] font-bold mb-2">"Mengapa Air Putih Menjadi Kunci Utama Kesehatan Tubuh?"</h3>
+                    <p class="text-sm text-[#4B5563] font-bold">Kategori : Kesehatan dan hidrasi</p>
+                </div>
+
+                <!--artikel 2-->
+                <div class="article-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer" data-category="edukasi" onclick="showErrorModal()">
+                    <h3 class="text-lg text-[#4B5563] font-bold mb-2">"Berapa Banyak Air yang Ideal Diminum Setiap Hari?"</h3>
+                    <p class="text-sm text-[#4B5563] font-bold">Kategori : Edukasi dan fakta sains</p>
+                </div>
+
+                <!--artikel 3-->
+                <div class="article-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer" data-category="kesehatan" onclick="hideArticleDetail()">
+                    <h3 class="text-lg text-[#4B5563] font-bold mb-2">"Dampak Dehidrasi Ringan terhadap Konsentrasi dan Produktivitas"</h3>
+                    <p class="text-sm text-[#4B5563] font-bold">Kategori : Kesehatan dan hidrasi</p>
+                </div>
+
+                <!--artikel 4-->
+                <div class="article-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer" data-category="edukasi" onclick="hideArticleDetail()">
+                    <h3 class="text-lg text-[#4B5563] font-bold mb-2">"Fakta Menarik: Minum Air Bisa Meningkatkan Fokus dan Suasana Hati"</h3>
+                    <p class="text-sm text-[#4B5563] font-bold">Kategori : Edukasi dan fakta sains</p>
+                </div>
+
+                <!--artikel 5-->
+                <div class="article-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer" data-category="nutrisi" onclick="hideArticleDetail()">
+                    <h3 class="text-lg text-[#4B5563] font-bold mb-2">"Air vs Minuman Manis: Mana yang Lebih Baik untuk Tubuh?"</h3>
+                    <p class="text-sm text-[#4B5563] font-bold">Kategori : Nutrisi dan gaya hidup sehat</p>
+                </div>
+
+                <!--artikel 6-->
+                <div class="article-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer" data-category="nutrisi" onclick="hideArticleDetail()">
+                    <h3 class="text-lg text-[#4B5563] font-bold mb-2">"Tips Menjaga Asupan Cairan Selama Aktivitas Fisik"</h3>
+                    <p class="text-sm text-[#4B5563] font-bold">Kategori : Nutrisi dan gaya hidup sehat</p>
+                </div>
+
+                <!--artikel 7-->
+                <div class="article-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer" data-category="nutrisi" onclick="hideArticleDetail()">
+                    <h3 class="text-lg text-[#4B5563] font-bold mb-2">"Kebiasaan Sehat yang Bisa Membantu Kamu Lebih Rajin Minum Air"</h3>
+                    <p class="text-sm text-[#4B5563] font-bold">Kategori : Nutrisi dan gaya hidup sehat</p>
+                </div>
+
+                <!--artikel 8-->
+                <div class="article-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer" data-category="edukasi" onclick="hideArticleDetail()">
+                    <h3 class="text-lg text-[#4B5563] font-bold mb-2">"Mitos dan Fakta Tentang Air: Tidak Semua Informasi di Internet Benar!"</h3>
+                    <p class="text-sm text-[#4B5563] font-bold">Kategori : Edukasi dan fakta sains</p>
+                </div>
+            </div>
+
+<!--ISI DETAIL ARTIKEL-->
+            <div id="articleDetail" class="hidden">
+                <div class="bg-white rounded-lg shadow-md p-8">
+                    <!-- <button onclick="hideArticleDetail()" class="mb-4 text-blue-600 hover:text-blue-800 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Kembali
+                    </button> -->
+                    <div class="text-center">
+                    <h2 class="text-2xl font-bold text-[#4B5563] mb-2">"Mengapa Air Putih Menjadi Kunci Utama Kesehatan Tubuh?"</h2>
+                    <p class="text-sm text-gray-600 mb-6 text-[#4B5563] font-bold">Kategori : Kesehatan dan hidrasi</p>
+                    </div>
+                    
+                    <div class="prose max-w-none space-y-4 text-[#4B5563] font-bold">
+                        <p>Dalam kehidupan sehari-hari, air putih sering kali dianggap sepele, padahal perannnya sangat penting bagi kesehatan tubuh manusia. Berdasarkan laporan dari Kementerian Kesehatan RI, lebih dari 60% komposisi tubuh manusia terdiri dari air. Hal ini menjadikan air sebagai komponen vital dalam menjaga fungsi organ, mengatur suhu tubuh, serta membantu proses metabolisme.</p>
+                        <p>Para ahli gizi menekankan bahwa kekurangan cairan dapat menyebabkan dehidrasi, yang ditandai dengan gejala seperti kelelahan, sakit kepala, dan menurunnya konsentrasi. Dalam jangka panjang, dehidrasi kronis dapat meningkatkan risiko gangguan ginjal, infeksi saluran kemih, hingga masalah pada kulit.</p>                 
+                        <p>Menurut penelitian yang diterbitkan oleh World Health Organization (WHO), kebutuhan air harian untuk orang dewasa rata-rata adalah 2-2,5 liter per hari, tergantung aktivitas fisik dan kondisi lingkungan. Minum air putih secara cukup terbukti membantu meningkatkan energi, menjaga sistem pencernaan, serta membuang racun dari dalam tubuh melalui urin dan keringat.</p>                        
+                        <p>Selain itu, air putih juga berperan penting dalam menjaga keseimbangan elektrolit. Ketika tubuh kekurangan cairan, keseimbangan elektrolit terganggu dan dapat menyebabkan kram otot atau gangguan pada sistem saraf.</p>                      
+                        <p>Untuk itu, para pakar kesehatan menyarankan agar masyarakat membiasakan minum air putih secara teratur, bahkan sebelum merasa haus. Kebiasaan sederhana ini dapat menjadi langkah awal menuju hidup yang lebih sehat.</p>
+                        
+                        <div class="p-4 rounded-lg mt-6">
+                            <h4 class="mb-3 text-[#4B5563] font-bold">💡 Tips Edukasi:</h4>
+                            <ol class="list-decimal list-inside space-y-2">
+                                <li>Bawalah botol air minum sendiri untuk memantau asupan harian.</li>
+                                <li>Minum segelas air setelah bangun tidur dan sebelum tidur malam.</li>
+                                <li>Kurangi minuman manis dan berkafein yang dapat menyebabkan dehidrasi.</li>
+                                <li>Gunakan aplikasi pengingat minum jika sering lupa.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<!--MODAL NOTIFIKASI (untuk buat bagian tampilan dan logika notifikasi)-->
+    <div id="newsErrorModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000]">
+        <div class="bg-white rounded-lg max-w-md mx-4 text-center relative border-2 border-blue-500">
+            <!-- <button onclick="closeNewsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </button> -->
+            <div class="p-6">
+                <div class="w-16 h-16 bg-red-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Sistem gagal menampilkan berita dan edukasi silahkan coba lagi!</h3>
+                <button onclick="closeModal()" class="bg-blue-500 text-white px-8 py-2 rounded-lg hover:bg-blue-600 transition">OK</button>
+            </div>
+        </div>
+    </div>
+
+<!--FUNGSI-->
+    <script>
+        function filterCategory(category) { //cari berdasarkan kategori
+            const articles = document.querySelectorAll('.article-card');
+            const buttons = document.querySelectorAll('.category-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('bg-blue-500')); //untuk atur warna kategori saat tombol dipencet
+            event.target.classList.add('bg-white', 'text-blue-600');
+
+            articles.forEach(article => { //untuk filter artikel
+                if (category === 'all' || article.dataset.category === category) {
+                    article.style.display = 'block';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+        }
+
+        function filterArticles() { //cari berdasarkan input kata atau kalimat
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const articles = document.querySelectorAll('.article-card');
+            
+            articles.forEach(article => {
+                const title = article.querySelector('h3').textContent.toLowerCase();
+                if (title.includes(input)) {
+                    article.style.display = 'block';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+        }
+
+        function showArticleDetail(articleId) {
+            document.getElementById('articlesList').classList.add('hidden');
+            document.getElementById('articleDetail').classList.remove('hidden');
+        }
+
+        function hideArticleDetail() {
+            document.getElementById('articlesList').classList.remove('hidden');
+            document.getElementById('articleDetail').classList.add('hidden');
+        }
+
+        function showErrorModal() { //untuk tampilin error
+            document.getElementById('newsErrorModal').classList.remove('hidden');
+        }
+
+        function closeModal() { //untuk tutup error
+            document.getElementById('newsErrorModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
