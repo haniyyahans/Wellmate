@@ -108,18 +108,18 @@
                 <div id="weekly-content" class="p-6">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <!--diagram-->
-                        <div class="lg:col-span-1 w-full lg:w-[600px]"><!--atur letak diagram-->
+                        <div class="lg:col-span-1 w-full lg:w-[400px]"><!--atur letak diagram-->
                             <h3 class="text-gray-700 font-medium mb-4 text-center">Progres Jumlah Minum per Hari (1 Minggu)</h3><!--atur letak tulisan-->
-                            <div class="w-full lg:w-[650px] h-80"><!--atur area diagram-->
-                            <canvas id="weeklyChart" width="500" height="300"></canvas><!--tampilin diagram dri chart dibawah, atur besar kecil diagram-->
+                            <div class="w-full h-80"><!--atur area diagram-->
+                            <canvas id="weeklyChart"></canvas><!--tampilin diagram dri chart dibawah, atur besar kecil diagram-->
                             </div>
                         </div>
 
                         <!--jumlah minum-->
-                        <div class="lg:col-span-1 space-y-4 text-[#4B5563] font-bold max-w-[200px] ml-44"> <!--atur kotak-->
+                        <div class="lg:col-span-1 space-y-4 text-[#4B5563] font-bold ml-28"> <!--atur kotak-->
                             <div class="bg-blue-50 p-4 rounded-lg shadow-md">
-                                <h4 class="mb-3">Jumlah minum/hari:</h4>
-                                <div class="grid grid-cols-[max-content_auto] text-sm gap-x-[2px]"> <!--pake kolom agar titik 2 lurus-->
+                                <h5 class="mb-3 text-sm">Jumlah minum/hari:</h5>
+                                <div class="grid grid-cols-[max-content_auto] text-xs gap-x-[2px]"> <!--pake kolom agar titik 2 lurus-->
                                     <div>Senin</div><div>: 1.800 ml</div>
                                     <div>Selasa</div><div>: 1.600 ml</div>
                                     <div>Rabu</div><div>: 2.000 ml</div>
@@ -167,18 +167,18 @@
                 <div id="monthly-content" class="p-6">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <!--diagram-->
-                        <div class="lg:col-span-1 w-full lg:w-[600px]">
+                        <div class="lg:col-span-1 w-full lg:w-[390px]">
                             <h3 class="text-gray-700 font-medium mb-4 text-center">Progres Jumlah Minum per Minggu (1 Bulan)</h3>
-                            <div class="w-full lg:w-[650px] h-80">
-                            <canvas id="monthlyChart" width="500" height="300"></canvas>
+                            <div class="w-full h-100">
+                            <canvas id="monthlyChart"></canvas>
                             </div>
                         </div>
 
                         <!--jumlah minum-->
-                        <div class="lg:col-span-1 space-y-4 text-[#4B5563] font-bold ml-44 w-[215px]">
+                        <div class="lg:col-span-1 space-y-4 text-[#4B5563] font-bold ml-28"> 
                             <div class="bg-blue-50 p-4 rounded-lg shadow-md">
-                                <h3 class="mb-3">Jumlah minum/minggu:</h3>
-                                <div class="space-y-1 text-sm">
+                                <h5 class="mb-3 text-sm">Jumlah minum/minggu:</h5>
+                                <div class="space-y-1 text-[11px]">
                                     <div>Minggu ke-1 : 12.600 ml</div>
                                     <div>Minggu ke-2 : 14.600 ml</div>
                                     <div>Minggu ke-3 : 14.800 ml</div>
@@ -249,7 +249,7 @@
             },
             options: { //pengaturan chart
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: false
