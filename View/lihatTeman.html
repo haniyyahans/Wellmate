@@ -10,76 +10,66 @@
 <body class="bg-gray-100 font-sans">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-lg">
+        <aside class="w-64 bg-white shadow-lg flex flex-col">
             <!-- Logo -->
-            <div class="p-6">
-                <div class="flex items-center space-x-2">
-                    <div class="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center">
-                        <!-- <img src="assets/logo/wellmate-logo.png" alt="WellMate Logo" class="w-full h-full object-cover"> -->
-                    </div>
-                    <span class="text-2xl font-bold text-gray-600">WellMate</span>
-                </div>
+            <div class="py-5">
+                <a href="index.html" class="-mt-[50px] -mb-[25px] flex items-center no-underline">
+                    <img src="/assets/logoWellmate.jpg" alt="WellMate Logo" class="h-[140px] -mr-10 -ml-8">
+                    <span class="text-[1.4em] text-gray-700 font-bold pb-[15px]">WellMate</span>
+                </a>
             </div>
 
-            <!-- Menu Navigasi -->
-            <nav class="p-4">
-                <ul class="space-y-2">
-                    <li>
-                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Beranda</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
-                            <i class="fas fa-glass-water"></i>
-                            <span>Tracking Minum</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
-                            <i class="fas fa-running"></i>
-                            <span>Saran Aktivitas</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Laporan dan Analisis</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
-                            <i class="fas fa-newspaper"></i>
-                            <span>Berita dan Edukasi</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="lihatTeman.html" class="flex items-center space-x-3 px-4 py-3 text-blue-600 bg-blue-50 rounded-lg transition">
-                            <i class="fas fa-users"></i>
-                            <span class="font-semibold">Teman</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
-                            <i class="fas fa-cog"></i>
-                            <span>Pengaturan</span>
-                        </a>
-                    </li>
-                </ul>
+            <!-- Menu -->
+            <nav class="flex-1 p-4 space-y-2">
+                <a href="berandapage.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Beranda</span>
+                </a>
+
+                <a href="tracking.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-glass-water"></i>
+                    <span>Tracking Minum</span>
+                </a>
+
+                <a href="saran.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-running"></i>
+                    <span>Saran Aktivitas</span>
+                </a>
+
+                <a href="laporandanAnalisis.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Laporan dan Analisis</span>
+                </a>
+
+                <a href="beritaEdukasi.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Berita dan Edukasi</span>
+                </a>
+
+                <a href="lihatTeman.html" class="flex items-center space-x-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-lg">
+                    <i class="fas fa-users"></i>
+                    <span class="font-medium">Teman</span>
+                </a>
+
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
+                </a>
             </nav>
 
-            <!-- Tombol Keluar -->
-            <div class="absolute bottom-6 left-4 right-4">
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
-                    <i class="fas fa-sign-out-alt"></i>
+            <!-- Logout -->
+            <div class="p-3 no-underline">
+                <a href="signinpage.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
                     <span>Keluar</span>
                 </a>
             </div>
         </aside>
 
         <!-- Konten Utama -->
-        <main class="flex-1 overflow-y-auto">
+        <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Header -->
             <header class="bg-white shadow-sm px-8 py-4 flex justify-between items-center">
                 <div></div>
@@ -93,13 +83,13 @@
                     </div>
                     <!-- Foto Profil -->
                     <div class="w-10 h-10 bg-blue-400 rounded-full overflow-hidden flex items-center justify-center">
-                        <i class="fas fa-user text-white"></i>
+                        <img src="/assets/fotoProfil.jpg" alt="Profile Picture" class="w-full h-full object-cover">
                     </div>
                 </div>
             </header>
 
-            <!-- Area Konten -->
-            <div class="p-8 bg-blue-100 min-h-full">
+            <main class="flex-1 overflow-y-auto bg-blue-100 p-6"> 
+                <!-- Area Konten -->
                 <div class="bg-white rounded-2xl shadow-lg p-8">
                     <!-- Judul Halaman dan Aksi -->
                     <div class="flex justify-between items-center mb-8">
@@ -117,7 +107,7 @@
                     </div>
 
                     <!-- Daftar Aktivitas Teman -->
-                    <div class="space-y-4" id="friendsList">
+                    <div  iv class="space-y-4" id="friendsList">
                         <!-- Item Teman 1 -->
                         <div class="flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition friend-item">
                             <div class="flex items-center space-x-4">
@@ -227,31 +217,32 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Jika belum ada teman (tersembunyi secara default) -->
-                    <div id="emptyState" class="hidden text-center py-16">
-                        <i class="fas fa-users text-gray-300 text-6xl mb-4"></i>
-                        <h3 class="text-2xl font-bold text-gray-400 mb-2">Belum Ada Teman</h3>
-                        <p class="text-gray-400 mb-6">Tambahkan teman untuk melihat aktivitas mereka</p>
-                        <button class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                            <i class="fas fa-user-plus mr-2"></i>
-                            Tambah Teman
-                        </button>
+                        <!-- Jika belum ada teman (tersembunyi secara default) -->
+                        <div id="emptyState" class="hidden text-center py-16">
+                            <i class="fas fa-users text-gray-300 text-6xl mb-4"></i>
+                            <h3 class="text-2xl font-bold text-gray-400 mb-2">Belum Ada Teman</h3>
+                            <p class="text-gray-400 mb-6">Tambahkan teman untuk melihat aktivitas mereka</p>
+                            <button class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                                <i class="fas fa-user-plus mr-2"></i>
+                                Tambah Teman
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </div>
+            
     </div>
 
     <!-- Modal Konfirmasi Hapus -->
     <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all">
             <div class="text-center">
-                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-times text-red-500 text-3xl"></i>
+                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-times text-white text-3xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-2">Hapus Teman?</h3>
+                <h3 class="text-2xl font-bold text-gray-700 mb-2">Hapus Teman?</h3>
                 <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus <span id="friendNameToDelete" class="font-semibold"></span> dari daftar teman?</p>
                 <div class="flex space-x-3">
                     <button id="cancelDelete" class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold">
