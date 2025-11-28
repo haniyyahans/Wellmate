@@ -1,5 +1,5 @@
 -- ============================================
--- DATABASE WELLMATE - FITUR NOTIFIKASI & TEMAN
+-- DATABASE WELLMATE
 -- ============================================
 
 -- Buat Database
@@ -7,7 +7,7 @@ CREATE DATABASE IF NOT EXISTS wellmate;
 USE wellmate;
 
 -- ============================================
--- TABEL PENGGUNA (untuk referensi FK)
+-- TABEL PENGGUNA
 -- ============================================
 CREATE TABLE pengguna (
     id_pengguna INT AUTO_INCREMENT PRIMARY KEY,
@@ -19,6 +19,98 @@ CREATE TABLE pengguna (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_id_akun (id_akun)
 );
+
+-- ============================================
+-- TABEL JENIS MINUMAN
+-- ============================================
+CREATE TABLE IF NOT EXISTS jenis_minuman (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nama VARCHAR(50) NOT NULL,
+    ikon VARCHAR(10) NOT NULL,
+    warna VARCHAR(7) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- TABEL CATATAN MINUM HARIAN
+-- ============================================
+CREATE TABLE IF NOT EXISTS catatan_minum (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT DEFAULT 1,
+    jenis VARCHAR(50) NOT NULL,
+    jumlah INT NOT NULL,
+    waktu VARCHAR(10) NOT NULL,
+    tanggal DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_user_tanggal (user_id, tanggal)
+);
+
+-- ============================================
+-- TABEL TARGET HARIAN USER
+-- ============================================
+CREATE TABLE IF NOT EXISTS user_target (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT DEFAULT 1,
+    target_harian INT NOT NULL DEFAULT 2500,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_user (user_id)
+);
+
+-- ============================================
+-- TABEL AKTIVITAS FISIK
+-- ============================================
+CREATE TABLE IF NOT EXISTS aktivitas_fisik (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nama VARCHAR(100) NOT NULL,
+    ikon VARCHAR(10) NOT NULL,
+    cairan_tambahan VARCHAR(20) NOT NULL,
+    deskripsi TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- INSERT DATA DUMMY - JENIS MINUMAN
+-- ============================================
+INSERT INTO jenis_minuman (nama, ikon, warna) VALUES
+('Air Putih', '💧', '#3478F5'),
+('Teh Hijau', '🍵', '#34C759'),
+('Jus Buah', '🍊', '#FFB300'),
+('Kopi', '☕', '#8B4513'),
+('Susu', '🥛', '#F0E68C'),
+('Soda', '🥤', '#87CEFA'),
+('Jamu', '🌿', '#A0522D'),
+('Yogurt', '🥄', '#FFDEAD');
+
+-- Insert data aktivitas fisik
+-- ============================================
+-- INSERT DATA DUMMY - AKTIVITAS FISIK
+-- ============================================
+INSERT INTO aktivitas_fisik (nama, ikon, cairan_tambahan, deskripsi) VALUES
+('Lari 30-60 menit', '🏃', '±400 ml', 'Aktivitas kardio yang meningkatkan detak jantung dan membuat tubuh cepat kehilangan cairan melalui keringat. Sangat disarankan untuk minum sebelum, selama, dan setelah lari.'),
+('Gym 1 jam', '🏋️', '±500 ml', 'Latihan beban dan kardio intens dalam ruangan yang meningkatkan suhu tubuh. Kehilangan keringat tinggi. Pastikan asupan cairan untuk menjaga performa.'),
+('Angkat Beban 45-60 menit', '💪', '±300 ml', 'Meskipun tidak seintensif kardio, angkat beban tetap menyebabkan kehilangan cairan. Minum secara teratur antar set untuk menjaga fokus dan energi.'),
+('Bersepeda 45 menit', '🚴', '±450 ml', 'Bersepeda, terutama di luar ruangan, membutuhkan asupan cairan yang konsisten. Kebutuhan cairan bisa lebih tinggi jika cuaca panas.'),
+('Kerja Fisik', '👷', '±600 ml', 'Bekerja di luar atau di lingkungan panas/lembab memerlukan perhatian ekstra pada hidrasi. Disarankan minum setiap 20-30 menit kerja.'),
+('Aerobik atau Zumba 45 menit', '💃', '±350 ml', 'Aktivitas grup yang energik dan bergerak cepat. Kehilangan cairan terjadi secara cepat. Jaga botol air di dekat Anda.'),
+('Mendaki 2-4 jam', '⛰️', '±1.5 L', 'Aktivitas yang berlangsung lama dan sering di lingkungan yang menantang (pulau/dataran tinggi). Wajib membawa cairan yang cukup dan elektrolit.'),
+('Olahraga 1-2 jam', '⚽', '±750 ml', 'Aktivitas olahraga tim (sepak bola, basket) yang memerlukan gerakan sporadis intens. Konsumsi cairan di waktu istirahat sangat penting.'),
+('Lainnya', '✨', '±250 ml', 'Untuk aktivitas ringan atau durasi yang lebih singkat, tambahan 250ml sudah cukup. Sesuaikan dengan rasa haus Anda.');
+
+-- ============================================
+-- INSERT DATA DUMMY - DEFAULT USER TARGET
+-- ============================================
+INSERT INTO user_target (user_id, target_harian) VALUES (1, 2500);
+
+-- =================================================
+-- INSERT DATA DUMMY - CATATAN MINUM UNTUK HARI INI
+-- =================================================
+INSERT INTO catatan_minum (user_id, jenis, jumlah, waktu, tanggal) VALUES
+(1, 'Teh Hijau', 500, '10:15', CURDATE()),
+(1, 'Air Putih', 600, '12:00', CURDATE()),
+(1, 'Air Putih', 250, '14:30', CURDATE()),
+(1, 'Jus Buah', 450, '14:55', CURDATE()),
+(1, 'Kopi', 250, '16:30', CURDATE());
 
 -- ============================================
 -- TABEL NOTIFIKASI
@@ -132,231 +224,3 @@ INSERT INTO teman (id_pengguna, id_user_teman, status, tanggal) VALUES
 -- Permintaan yang ditolak
 (3, 5, 'declined', '2025-01-13'),
 (4, 6, 'declined', '2025-01-12');
-
--- ============================================
--- QUERY UTILITAS
--- ============================================
-
--- View: Notifikasi belum dibaca per pengguna
-CREATE VIEW v_notifikasi_unread AS
-SELECT 
-    n.id_notif,
-    n.id_pengguna,
-    p.nama as nama_pengguna,
-    n.pesan,
-    n.waktu_kirim,
-    n.status
-FROM notifikasi n
-JOIN pengguna p ON n.id_pengguna = p.id_pengguna
-WHERE n.status = 'unread'
-ORDER BY n.waktu_kirim DESC;
-
--- View: Daftar teman aktif
-CREATE VIEW v_daftar_teman_aktif AS
-SELECT 
-    t.id_teman,
-    p1.id_pengguna,
-    p1.nama as nama_pengguna,
-    p2.id_pengguna as id_teman_user,
-    p2.nama as nama_teman,
-    t.status,
-    t.tanggal
-FROM teman t
-JOIN pengguna p1 ON t.id_pengguna = p1.id_pengguna
-JOIN pengguna p2 ON t.id_user_teman = p2.id_pengguna
-WHERE t.status = 'accepted'
-ORDER BY t.tanggal DESC;
-
--- View: Permintaan pertemanan pending
-CREATE VIEW v_permintaan_pending AS
-SELECT 
-    t.id_teman,
-    p1.id_pengguna as pengirim_id,
-    p1.nama as pengirim_nama,
-    p2.id_pengguna as penerima_id,
-    p2.nama as penerima_nama,
-    t.tanggal
-FROM teman t
-JOIN pengguna p1 ON t.id_pengguna = p1.id_pengguna
-JOIN pengguna p2 ON t.id_user_teman = p2.id_pengguna
-WHERE t.status = 'pending'
-ORDER BY t.tanggal DESC;
-
--- ============================================
--- STORED PROCEDURES
--- ============================================
-
--- Procedure: Kirim notifikasi pengingat minum
-DELIMITER $$
-CREATE PROCEDURE sp_kirim_notifikasi_pengingat(
-    IN p_id_pengguna INT,
-    IN p_pesan TEXT
-)
-BEGIN
-    INSERT INTO notifikasi (id_pengguna, pesan, status)
-    VALUES (p_id_pengguna, p_pesan, 'unread');
-    
-    SELECT 'Notifikasi berhasil dikirim' as message;
-END$$
-
--- Procedure: Update status notifikasi menjadi dibaca
-CREATE PROCEDURE sp_baca_notifikasi(
-    IN p_id_notif INT
-)
-BEGIN
-    UPDATE notifikasi 
-    SET status = 'read' 
-    WHERE id_notif = p_id_notif;
-    
-    SELECT 'Notifikasi ditandai sebagai dibaca' as message;
-END$$
-
--- Procedure: Kirim permintaan pertemanan
-CREATE PROCEDURE sp_kirim_permintaan_teman(
-    IN p_id_pengguna INT,
-    IN p_id_user_teman INT
-)
-BEGIN
-    DECLARE pesan_notif TEXT;
-    DECLARE nama_pengirim VARCHAR(100);
-    
-    -- Cek apakah sudah ada permintaan
-    IF EXISTS (
-        SELECT 1 FROM teman 
-        WHERE (id_pengguna = p_id_pengguna AND id_user_teman = p_id_user_teman)
-           OR (id_pengguna = p_id_user_teman AND id_user_teman = p_id_pengguna)
-    ) THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Permintaan pertemanan sudah ada';
-    END IF;
-    
-    -- Insert permintaan teman
-    INSERT INTO teman (id_pengguna, id_user_teman, status)
-    VALUES (p_id_pengguna, p_id_user_teman, 'pending');
-    
-    -- Kirim notifikasi ke penerima
-    SELECT nama INTO nama_pengirim 
-    FROM pengguna 
-    WHERE id_pengguna = p_id_pengguna;
-    
-    SET pesan_notif = CONCAT(nama_pengirim, ' mengirim permintaan pertemanan');
-    
-    INSERT INTO notifikasi (id_pengguna, pesan, status)
-    VALUES (p_id_user_teman, pesan_notif, 'unread');
-    
-    SELECT 'Permintaan pertemanan berhasil dikirim' as message;
-END$$
-
--- Procedure: Terima/Tolak permintaan pertemanan
-CREATE PROCEDURE sp_update_status_teman(
-    IN p_id_teman INT,
-    IN p_status VARCHAR(30)
-)
-BEGIN
-    DECLARE pesan_notif TEXT;
-    DECLARE id_pengirim INT;
-    DECLARE nama_penerima VARCHAR(100);
-    
-    -- Update status pertemanan
-    UPDATE teman 
-    SET status = p_status, updated_at = CURRENT_TIMESTAMP
-    WHERE id_teman = p_id_teman;
-    
-    -- Kirim notifikasi ke pengirim
-    SELECT id_pengguna INTO id_pengirim
-    FROM teman
-    WHERE id_teman = p_id_teman;
-    
-    SELECT nama INTO nama_penerima
-    FROM pengguna p
-    JOIN teman t ON p.id_pengguna = t.id_user_teman
-    WHERE t.id_teman = p_id_teman;
-    
-    IF p_status = 'accepted' THEN
-        SET pesan_notif = CONCAT(nama_penerima, ' menerima permintaan pertemanan Anda');
-    ELSE
-        SET pesan_notif = CONCAT(nama_penerima, ' menolak permintaan pertemanan Anda');
-    END IF;
-    
-    INSERT INTO notifikasi (id_pengguna, pesan, status)
-    VALUES (id_pengirim, pesan_notif, 'unread');
-    
-    SELECT CONCAT('Status pertemanan berhasil diupdate menjadi ', p_status) as message;
-END$$
-
--- Procedure: Hapus teman
-CREATE PROCEDURE sp_hapus_teman(
-    IN p_id_teman INT
-)
-BEGIN
-    DELETE FROM teman WHERE id_teman = p_id_teman;
-    SELECT 'Teman berhasil dihapus' as message;
-END$$
-
-DELIMITER ;
-
--- ============================================
--- CONTOH QUERY PENGGUNAAN
--- ============================================
-
--- 1. Lihat semua notifikasi belum dibaca
-SELECT * FROM v_notifikasi_unread;
-
--- 2. Lihat daftar teman aktif pengguna tertentu
-SELECT * FROM v_daftar_teman_aktif WHERE id_pengguna = 1;
-
--- 3. Lihat permintaan pertemanan pending
-SELECT * FROM v_permintaan_pending WHERE penerima_id = 2;
-
--- 4. Kirim notifikasi pengingat
-CALL sp_kirim_notifikasi_pengingat(1, 'Jangan lupa minum air putih! 💧');
-
--- 5. Tandai notifikasi sebagai dibaca
-CALL sp_baca_notifikasi(1);
-
--- 6. Kirim permintaan pertemanan
-CALL sp_kirim_permintaan_teman(3, 7);
-
--- 7. Terima permintaan pertemanan
-CALL sp_update_status_teman(10, 'accepted');
-
--- 8. Tolak permintaan pertemanan
-CALL sp_update_status_teman(11, 'declined');
-
--- 9. Hapus teman
-CALL sp_hapus_teman(14);
-
--- ============================================
--- QUERY STATISTIK
--- ============================================
-
--- Jumlah notifikasi unread per pengguna
-SELECT 
-    p.id_pengguna,
-    p.nama,
-    COUNT(n.id_notif) as total_notif_unread
-FROM pengguna p
-LEFT JOIN notifikasi n ON p.id_pengguna = n.id_pengguna AND n.status = 'unread'
-GROUP BY p.id_pengguna, p.nama
-ORDER BY total_notif_unread DESC;
-
--- Jumlah teman aktif per pengguna
-SELECT 
-    p.id_pengguna,
-    p.nama,
-    COUNT(t.id_teman) as total_teman
-FROM pengguna p
-LEFT JOIN teman t ON p.id_pengguna = t.id_pengguna AND t.status = 'accepted'
-GROUP BY p.id_pengguna, p.nama
-ORDER BY total_teman DESC;
-
--- Permintaan pertemanan pending per pengguna
-SELECT 
-    p.id_pengguna,
-    p.nama,
-    COUNT(t.id_teman) as total_pending
-FROM pengguna p
-LEFT JOIN teman t ON p.id_pengguna = t.id_user_teman AND t.status = 'pending'
-GROUP BY p.id_pengguna, p.nama
-HAVING total_pending > 0
-ORDER BY total_pending DESC;
