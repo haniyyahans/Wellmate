@@ -1,6 +1,25 @@
 # Wellmate
-database sabre (tracking dan saran), aku pake workbench
+sabre (tracking dan saran), aku pake workbench
 
+STRUKTUR MVC
+wellmate/
+├── index.php
+├── controller/
+│   ├── Controller.class.php
+│   ├── Tracking.class.php
+│   └── Saran.class.php
+├── model/
+│   ├── Model.class.php
+│   ├── TrackingModel.class.php
+│   └── SaranModel.class.php
+├── view/
+│   ├── tracking.php
+│   └── saran.php
+└── assets/
+    ├── logoWellmate.jpg
+    └── fotoProfil.jpg
+
+DATABASE
 -- Create Database
 CREATE DATABASE IF NOT EXISTS wellmate;
 USE wellmate;
