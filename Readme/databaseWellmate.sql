@@ -9,7 +9,7 @@ USE wellmate;
 -- ============================================
 -- TABEL PENGGUNA
 -- ============================================
-CREATE TABLE pengguna (
+CREATE TABLE IF NOT EXISTS pengguna (
     id_pengguna INT AUTO_INCREMENT PRIMARY KEY,
     id_akun INT NOT NULL,
     nama VARCHAR(100) NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS aktivitas_fisik (
 -- ============================================
 -- TABEL NOTIFIKASI
 -- ============================================
-CREATE TABLE notifikasi (
+CREATE TABLE IF NOT EXISTS notifikasi (
     id_notif INT AUTO_INCREMENT PRIMARY KEY,
     id_pengguna INT NOT NULL,
     pesan TEXT NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE notifikasi (
 -- ============================================
 -- TABEL TEMAN
 -- ============================================
-CREATE TABLE teman (
+CREATE TABLE IF NOT EXISTS teman (
     id_teman INT AUTO_INCREMENT PRIMARY KEY,
     id_pengguna INT NOT NULL,
     id_user_teman INT NOT NULL,
