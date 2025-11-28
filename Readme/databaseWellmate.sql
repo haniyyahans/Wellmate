@@ -70,49 +70,6 @@ CREATE TABLE IF NOT EXISTS aktivitas_fisik (
 );
 
 -- ============================================
--- INSERT DATA DUMMY - JENIS MINUMAN
--- ============================================
-INSERT INTO jenis_minuman (nama, ikon, warna) VALUES
-('Air Putih', '💧', '#3478F5'),
-('Teh Hijau', '🍵', '#34C759'),
-('Jus Buah', '🍊', '#FFB300'),
-('Kopi', '☕', '#8B4513'),
-('Susu', '🥛', '#F0E68C'),
-('Soda', '🥤', '#87CEFA'),
-('Jamu', '🌿', '#A0522D'),
-('Yogurt', '🥄', '#FFDEAD');
-
--- Insert data aktivitas fisik
--- ============================================
--- INSERT DATA DUMMY - AKTIVITAS FISIK
--- ============================================
-INSERT INTO aktivitas_fisik (nama, ikon, cairan_tambahan, deskripsi) VALUES
-('Lari 30-60 menit', '🏃', '±400 ml', 'Aktivitas kardio yang meningkatkan detak jantung dan membuat tubuh cepat kehilangan cairan melalui keringat. Sangat disarankan untuk minum sebelum, selama, dan setelah lari.'),
-('Gym 1 jam', '🏋️', '±500 ml', 'Latihan beban dan kardio intens dalam ruangan yang meningkatkan suhu tubuh. Kehilangan keringat tinggi. Pastikan asupan cairan untuk menjaga performa.'),
-('Angkat Beban 45-60 menit', '💪', '±300 ml', 'Meskipun tidak seintensif kardio, angkat beban tetap menyebabkan kehilangan cairan. Minum secara teratur antar set untuk menjaga fokus dan energi.'),
-('Bersepeda 45 menit', '🚴', '±450 ml', 'Bersepeda, terutama di luar ruangan, membutuhkan asupan cairan yang konsisten. Kebutuhan cairan bisa lebih tinggi jika cuaca panas.'),
-('Kerja Fisik', '👷', '±600 ml', 'Bekerja di luar atau di lingkungan panas/lembab memerlukan perhatian ekstra pada hidrasi. Disarankan minum setiap 20-30 menit kerja.'),
-('Aerobik atau Zumba 45 menit', '💃', '±350 ml', 'Aktivitas grup yang energik dan bergerak cepat. Kehilangan cairan terjadi secara cepat. Jaga botol air di dekat Anda.'),
-('Mendaki 2-4 jam', '⛰️', '±1.5 L', 'Aktivitas yang berlangsung lama dan sering di lingkungan yang menantang (pulau/dataran tinggi). Wajib membawa cairan yang cukup dan elektrolit.'),
-('Olahraga 1-2 jam', '⚽', '±750 ml', 'Aktivitas olahraga tim (sepak bola, basket) yang memerlukan gerakan sporadis intens. Konsumsi cairan di waktu istirahat sangat penting.'),
-('Lainnya', '✨', '±250 ml', 'Untuk aktivitas ringan atau durasi yang lebih singkat, tambahan 250ml sudah cukup. Sesuaikan dengan rasa haus Anda.');
-
--- ============================================
--- INSERT DATA DUMMY - DEFAULT USER TARGET
--- ============================================
-INSERT INTO user_target (user_id, target_harian) VALUES (1, 2500);
-
--- =================================================
--- INSERT DATA DUMMY - CATATAN MINUM UNTUK HARI INI
--- =================================================
-INSERT INTO catatan_minum (user_id, jenis, jumlah, waktu, tanggal) VALUES
-(1, 'Teh Hijau', 500, '10:15', CURDATE()),
-(1, 'Air Putih', 600, '12:00', CURDATE()),
-(1, 'Air Putih', 250, '14:30', CURDATE()),
-(1, 'Jus Buah', 450, '14:55', CURDATE()),
-(1, 'Kopi', 250, '16:30', CURDATE());
-
--- ============================================
 -- TABEL NOTIFIKASI
 -- ============================================
 CREATE TABLE notifikasi (
@@ -162,6 +119,48 @@ INSERT INTO pengguna (id_akun, nama, berat_badan, usia) VALUES
 (6, 'Linda Kusuma', 54.0, 21),
 (7, 'Aisyah Rahman', 56.8, 20),
 (8, 'Nurul Fadilah', 59.2, 22);
+
+-- ============================================
+-- INSERT DATA DUMMY - JENIS MINUMAN
+-- ============================================
+INSERT INTO jenis_minuman (nama, ikon, warna) VALUES
+('Air Putih', '💧', '#3478F5'),
+('Teh Hijau', '🍵', '#34C759'),
+('Jus Buah', '🍊', '#FFB300'),
+('Kopi', '☕', '#8B4513'),
+('Susu', '🥛', '#F0E68C'),
+('Soda', '🥤', '#87CEFA'),
+('Jamu', '🌿', '#A0522D'),
+('Yogurt', '🥄', '#FFDEAD');
+
+-- ============================================
+-- INSERT DATA DUMMY - AKTIVITAS FISIK
+-- ============================================
+INSERT INTO aktivitas_fisik (nama, ikon, cairan_tambahan, deskripsi) VALUES
+('Lari 30-60 menit', '🏃', '±400 ml', 'Aktivitas kardio yang meningkatkan detak jantung dan membuat tubuh cepat kehilangan cairan melalui keringat. Sangat disarankan untuk minum sebelum, selama, dan setelah lari.'),
+('Gym 1 jam', '🏋️', '±500 ml', 'Latihan beban dan kardio intens dalam ruangan yang meningkatkan suhu tubuh. Kehilangan keringat tinggi. Pastikan asupan cairan untuk menjaga performa.'),
+('Angkat Beban 45-60 menit', '💪', '±300 ml', 'Meskipun tidak seintensif kardio, angkat beban tetap menyebabkan kehilangan cairan. Minum secara teratur antar set untuk menjaga fokus dan energi.'),
+('Bersepeda 45 menit', '🚴', '±450 ml', 'Bersepeda, terutama di luar ruangan, membutuhkan asupan cairan yang konsisten. Kebutuhan cairan bisa lebih tinggi jika cuaca panas.'),
+('Kerja Fisik', '👷', '±600 ml', 'Bekerja di luar atau di lingkungan panas/lembab memerlukan perhatian ekstra pada hidrasi. Disarankan minum setiap 20-30 menit kerja.'),
+('Aerobik atau Zumba 45 menit', '💃', '±350 ml', 'Aktivitas grup yang energik dan bergerak cepat. Kehilangan cairan terjadi secara cepat. Jaga botol air di dekat Anda.'),
+('Mendaki 2-4 jam', '⛰️', '±1.5 L', 'Aktivitas yang berlangsung lama dan sering di lingkungan yang menantang (pulau/dataran tinggi). Wajib membawa cairan yang cukup dan elektrolit.'),
+('Olahraga 1-2 jam', '⚽', '±750 ml', 'Aktivitas olahraga tim (sepak bola, basket) yang memerlukan gerakan sporadis intens. Konsumsi cairan di waktu istirahat sangat penting.'),
+('Lainnya', '✨', '±250 ml', 'Untuk aktivitas ringan atau durasi yang lebih singkat, tambahan 250ml sudah cukup. Sesuaikan dengan rasa haus Anda.');
+
+-- ============================================
+-- INSERT DATA DUMMY - DEFAULT USER TARGET
+-- ============================================
+INSERT INTO user_target (user_id, target_harian) VALUES (1, 2500);
+
+-- =================================================
+-- INSERT DATA DUMMY - CATATAN MINUM UNTUK HARI INI
+-- =================================================
+INSERT INTO catatan_minum (user_id, jenis, jumlah, waktu, tanggal) VALUES
+(1, 'Teh Hijau', 500, '10:15', CURDATE()),
+(1, 'Air Putih', 600, '12:00', CURDATE()),
+(1, 'Air Putih', 250, '14:30', CURDATE()),
+(1, 'Jus Buah', 450, '14:55', CURDATE()),
+(1, 'Kopi', 250, '16:30', CURDATE());
 
 -- ============================================
 -- INSERT DATA DUMMY - NOTIFIKASI
