@@ -47,16 +47,16 @@
             </div>
 
             <div class="flex w-full mb-6 rounded-lg overflow-hidden border border-input-border/50">
-                <button onclick="window.location.href='signinpage.html'"class="flex-1 px-6 py-3 text-gray-600 bg-white hover:bg-gray-50 text-sm font-medium">Sign in</button>
+                <button onclick="window.location.href='index.php?c=Auth&m=login'"class="flex-1 px-6 py-3 text-gray-600 bg-white hover:bg-gray-50 text-sm font-medium">Sign in</button>
                 <button class="flex-1 px-6 py-3 text-white bg-wellmate-blue text-sm font-medium">Sign up</button>
             </div>
             
-            <form class="w-full space-y-4">
-                <input type="text" placeholder="Enter your name" class="w-full px-4 py-3 border border-input-border rounded-lg focus:ring-wellmate-blue focus:border-wellmate-blue outline-none text-sm" required>
-                <input type="text" placeholder="Enter your username" class="w-full px-4 py-3 border border-input-border rounded-lg focus:ring-wellmate-blue focus:border-wellmate-blue outline-none text-sm" required>
-                <input type="password" placeholder="Enter your password" class="w-full px-4 py-3 border border-input-border rounded-lg focus:ring-wellmate-blue focus:border-wellmate-blue outline-none text-sm" required>
+            <form action="index.php?c=Auth&m=register" method="POST" class="w-full space-y-4">
+                <input type="text" name="nama" placeholder="Enter your name" class="w-full px-4 py-3 border border-input-border rounded-lg focus:ring-wellmate-blue focus:border-wellmate-blue outline-none text-sm" required>
+                <input type="text" name="username" placeholder="Enter your username" class="w-full px-4 py-3 border border-input-border rounded-lg focus:ring-wellmate-blue focus:border-wellmate-blue outline-none text-sm" required>
+                <input type="password" name="password" placeholder="Enter your password" class="w-full px-4 py-3 border border-input-border rounded-lg focus:ring-wellmate-blue focus:border-wellmate-blue outline-none text-sm" required>
                 
-                <button type="submit" onclick="window.location.href='signinpage.html'" class="w-full py-3 bg-wellmate-blue text-white font-medium rounded-lg shadow-md hover:bg-wellmate-blue/90 transition duration-150 mt-4">
+                <button type="submit" onclick="window.location.href='index.php?c=Auth&m=login'" class="w-full py-3 bg-wellmate-blue text-white font-medium rounded-lg shadow-md hover:bg-wellmate-blue/90 transition duration-150 mt-4">
                     Create account
                 </button>
             </form>
