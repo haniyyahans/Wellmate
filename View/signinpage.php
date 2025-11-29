@@ -47,12 +47,12 @@
 
             <div class="flex w-full mb-6 rounded-lg overflow-hidden border border-input-border/50">
                 <button class="flex-1 px-6 py-3 text-white bg-wellmate-blue text-sm font-medium">Sign in</button>
-                <button onclick="window.location.href='signuppage.html'" class="flex-1 px-6 py-3 text-gray-600 bg-white hover:bg-gray-50 text-sm font-medium">Sign up</button>
+                <button onclick="window.location.href='index.php?c=Auth&m=register'" class="flex-1 px-6 py-3 text-gray-600 bg-white hover:bg-gray-50 text-sm font-medium">Sign up</button>
             </div>
             
-            <form class="w-full space-y-4">
-                <input type="text" placeholder="Enter your username" class="w-full px-4 py-3 border border-input-border rounded-lg focus:ring-wellmate-blue focus:border-wellmate-blue outline-none text-sm" required>
-                <input type="password" placeholder="Enter your password" class="w-full px-4 py-3 border border-input-border rounded-lg focus:ring-wellmate-blue focus:border-wellmate-blue outline-none text-sm" required>
+            <form action="index.php?c=Auth&m=login" method="POST" class="w-full space-y-4">
+                <input type="text" name="username" placeholder="Enter your username" class="w-full px-4 py-3 border border-input-border rounded-lg focus:ring-wellmate-blue focus:border-wellmate-blue outline-none text-sm" required>
+                <input type="password" name="password" placeholder="Enter your password" class="w-full px-4 py-3 border border-input-border rounded-lg focus:ring-wellmate-blue focus:border-wellmate-blue outline-none text-sm" required>
                 
                 <div class="flex justify-between items-center text-sm">
                     <label class="flex items-center text-gray-600 cursor-pointer">
@@ -62,7 +62,7 @@
                     <a href="#" class="text-wellmate-blue hover:text-wellmate-blue/80 font-medium">Forgot Password?</a>
                 </div>
 
-                <button type="submit" onclick="window.location.href='berandapage.html'" class="w-full py-3 bg-wellmate-blue text-white font-medium rounded-lg shadow-md hover:bg-wellmate-blue/90 transition duration-150 mt-4">
+                <button type="submit" onclick="window.location.href='index.php?c=Tracking&m=index'" class="w-full py-3 bg-wellmate-blue text-white font-medium rounded-lg shadow-md hover:bg-wellmate-blue/90 transition duration-150 mt-4">
                     Login
                 </button>
             </form>
@@ -92,6 +92,47 @@
             </div>
 
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            
+            const formData = new FormData(form);
+            
+            try {
+                // Perhatikan: Endpoint API harusnya hanya mengembalikan JSON, 
+                // bukan menggunakan 'window.location.href' di tombol.
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                // Pastikan respons adalah 200 OK dan dapat diparsing
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    // ✅ Lakukan redirect DARI respons JSON
+                    // Periksa apakah ada properti redirect (opsional, tergantung implementasi)
+                    window.location.href = result.redirect || 'index.php?c=Tracking&m=index'; 
+                } else {
+                    alert(result.message); // Tampilkan pesan error dari server
+                    // Anda mungkin ingin menghapus baris ini untuk implementasi yang lebih baik
+                }
+            } catch (error) {
+                console.error('Error saat sign in:', error);
+                // Pesan ini sekarang lebih spesifik untuk kegagalan koneksi/parsing/HTTP
+                alert('Terjadi kesalahan koneksi atau respons server tidak valid.');
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
