@@ -1,26 +1,29 @@
 <?php
 
-class Model {
+class Model
+{
     protected $db;
-    
-    function __construct() {
-        try {
-            $host = 'localhost:3306';
-            $user = 'root';
-            $pass = '';
-            $db = 'wellmate';
-            
-            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-            $this->db = new mysqli($host, $user, $pass, $db);
-            
-            $this->db->set_charset('utf8mb4');
 
-        } catch (Exception $e) {
-            error_log("Database connection failed: " . $e->getMessage());
-            $this->db = null;
+    public function __construct()
+    {
+        // Konfigurasi koneksi ke database
+        $host = 'localhost:3306'; // Ganti dengan host database Anda
+        $user = 'root';
+        $pass = '';
+        $dbname = 'wellmate';
+
+        // Membuat koneksi ke database
+        $this->db = new mysqli($host, $user, $pass, $dbname);
+
+        // Set charset ke utf8mb4 untuk mendukung emoji
+        $this->db->set_charset("utf8mb4");
+
+        // Memeriksa koneksi
+        if ($this->db->connect_error) {
+            die("Connection failed: " . $this->db->connect_error);
         }
     }
-    
+
     protected function escape($value) {
         if ($this->db === null) {
             return htmlspecialchars($value);
@@ -45,5 +48,12 @@ class Model {
     
     protected function isConnected() {
         return $this->db !== null && $this->db->ping();
+    }
+
+    public function __destruct()
+    {
+        if ($this->db) {
+            $this->db->close();
+        }
     }
 }
