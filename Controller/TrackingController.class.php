@@ -1,3 +1,4 @@
+
 <?php
 
 class Tracking extends Controller {
@@ -11,14 +12,25 @@ class Tracking extends Controller {
     // Method default untuk menampilkan halaman tracking
     public function index() {
         try {
-            $userId = $this->getSession('user_id') ?? 1;
+            // Ganti 'user_id' menjadi 'id_pengguna' dan hapus default 1
+            $userId = $this->getSession('id_pengguna');
+            
+            // Enforce login: Jika user ID kosong, redirect ke halaman login
+            if (empty($userId)) {
+                $this->redirect('index.php?c=Auth&m=login');
+                return;
+            }
+            
+            // // Inisialisasi target user, target akan 2500 (default) jika belum ada data
+            // $this->trackingModel->inisialisasiTargetUser($userId); 
+
             $today = date('Y-m-d');
             
-            // minta data yg diperlukan ke model
+            // Minta data dengan user ID yang dinamis
             $jenisMinuman = $this->trackingModel->getJenisMinuman();
-            $targetHarian = $this->trackingModel->getTargetHarian($userId);
-            $catatanMinum = $this->trackingModel->getCatatanMinumByDate($today, $userId);
-            $statistik = $this->trackingModel->getStatistikHariIni($userId);
+            $targetHarian = $this->trackingModel->getTargetHarian($userId); // Pass $userId
+            $catatanMinum = $this->trackingModel->getCatatanMinumByDate($today, $userId); // Pass $userId
+            $statistik = $this->trackingModel->getStatistikHariIni($userId); // Pass $userId
             
             $data = [
                 'jenisMinuman' => $jenisMinuman,
@@ -27,15 +39,16 @@ class Tracking extends Controller {
                 'statistik' => $statistik
             ];
             
-            $this->view('tracking.php', $data);
+            $this->view('tracking', $data);
 
         // klo error/blm ada datanya, ditampilkan default ini:
         } catch (Exception $e) {
-            $this->view('tracking.php', [
+            $this->view('tracking', [
                 'jenisMinuman' => [],
                 'targetHarian' => 2500,
                 'catatanMinum' => [],
-                'statistik' => ['total_diminum' => 0, 'jumlah_catatan' => 0]
+                'statistik' => ['total_diminum' => 0, 'jumlah_catatan' => 0],
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ]);
         }
     }
@@ -67,31 +80,39 @@ class Tracking extends Controller {
         }
     }
     
-    // Method untuk tambah catatan minum
+    // Method untuk menambah catatan minum
     public function tambah() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
-                $userId = $this->getSession('user_id') ?? 1;
-                $jenis = $_POST['jenis'] ?? '';
-                $jumlah = $_POST['jumlah'] ?? 0;
-                $waktu = $_POST['waktu'] ?? '';
-                $tanggal = date('Y-m-d');
+                // Ambil ID pengguna yang sedang login
+                $userId = $this->getSession('id_pengguna'); 
                 
-                if (empty($jenis) || empty($jumlah) || empty($waktu)) {
+                if (empty($userId)) {
+                     $this->jsonResponse([
+                        'success' => false,
+                        'message' => 'Anda harus login untuk menambahkan catatan.'
+                    ]);
+                    return;
+                }
+
+                $jenisMinumanId = $_POST['jenis_minuman_id'] ?? '';
+                $jumlah = $_POST['jumlah'] ?? '';
+                
+                if (empty($jenisMinumanId) || empty($jumlah) || !is_numeric($jumlah)) {
                     $this->jsonResponse([
                         'success' => false,
-                        'message' => 'Data tidak lengkap'
+                        'message' => 'Input tidak valid'
                     ]);
                     return;
                 }
                 
-                $result = $this->trackingModel->tambahCatatanMinum($jenis, $jumlah, $waktu, $tanggal, $userId);
+                // Panggil model dengan user ID yang dinamis
+                $result = $this->trackingModel->tambahCatatanMinum($jenisMinumanId, $jumlah, $userId); 
                 
                 if ($result) {
                     $this->jsonResponse([
                         'success' => true,
-                        'message' => 'Catatan berhasil ditambahkan',
-                        'id' => $result
+                        'message' => 'Catatan berhasil ditambahkan'
                     ]);
                 } else {
                     $this->jsonResponse([
@@ -163,6 +184,17 @@ class Tracking extends Controller {
     public function hapus() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
+                // Ambil ID pengguna yang sedang login
+                $userId = $this->getSession('id_pengguna');
+                
+                if (empty($userId)) {
+                    $this->jsonResponse([
+                       'success' => false,
+                       'message' => 'Anda harus login untuk menghapus catatan.'
+                   ]);
+                   return;
+               }
+                
                 $id = $_POST['id'] ?? '';
                 
                 if (empty($id)) {
@@ -173,7 +205,8 @@ class Tracking extends Controller {
                     return;
                 }
                 
-                $result = $this->trackingModel->hapusCatatanMinum($id);
+                // Panggil model dengan ID catatan dan user ID untuk keamanan
+                $result = $this->trackingModel->hapusCatatanMinum($id, $userId); 
                 
                 if ($result) {
                     $this->jsonResponse([
@@ -183,7 +216,7 @@ class Tracking extends Controller {
                 } else {
                     $this->jsonResponse([
                         'success' => false,
-                        'message' => 'Gagal menghapus catatan'
+                        'message' => 'Gagal menghapus catatan atau catatan bukan milik Anda'
                     ]);
                 }
 
