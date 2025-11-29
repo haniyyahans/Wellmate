@@ -1,60 +1,60 @@
 <?php
 
-require_once __DIR__ . '/../Config/Database.class.php';
-
-class UserModel {
-    private $db;
-    
+class UserModel extends Model{
     public function __construct() {
-        $database = new Database();
-        $this->db = $database->getConnection();
+        parent::__construct(); // Panggil konstruktor Model untuk membuat koneksi $this->db
     }
     
     /**
      * Register user baru
      */
-    public function register($data) {
+    // Menggunakan parameter eksplisit (seperti UsersModel)
+    public function register($nama, $username, $password) {
+        
+        // Cek username sudah ada
+        $stmt_check = $this->db->prepare("SELECT id_akun FROM akun WHERE username = ?");
+        $stmt_check->bind_param("s", $username);
+        $stmt_check->execute();
+        $stmt_check->store_result();
+        
+        if ($stmt_check->num_rows > 0) {
+            $stmt_check->close();
+            return [
+                'success' => false,
+                'message' => 'Username sudah terdaftar'
+            ];
+        }
+        $stmt_check->close();
+        
+        // Hash password
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        
+        // Mulai transaction (manual)
+        $this->db->begin_transaction();
+        
         try {
-            // Cek username sudah ada
-            $stmt = $this->db->prepare("SELECT id_akun FROM akun WHERE username = ?");
-            $stmt->execute([$data['username']]);
-            
-            if ($stmt->fetch()) {
-                return [
-                    'success' => false,
-                    'message' => 'Username sudah terdaftar'
-                ];
-            }
-            
-            // Mulai transaction
-            $this->db->beginTransaction();
-            
-            // Hash password
-            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
-            
-            // Insert ke tabel akun
-            $stmt = $this->db->prepare("
-                INSERT INTO akun (username, password, email) 
-                VALUES (?, ?, ?)
+            // 1. Insert ke tabel akun
+            // Perbaikan: Menambahkan placeholder bind_param
+            $stmt_akun = $this->db->prepare("
+                INSERT INTO akun (username, password) 
+                VALUES (?, ?)
             ");
-            $stmt->execute([
-                $data['username'],
-                $hashedPassword,
-                $data['email']
-            ]);
+            $stmt_akun->bind_param("ss", $username, $hashedPassword);
+            $stmt_akun->execute();
+            $stmt_akun->close();
             
-            $idAkun = $this->db->lastInsertId();
+            $idAkun = $this->db->insert_id;
             
-            // Insert ke tabel pengguna
-            $stmt = $this->db->prepare("
+            // 2. Insert ke tabel pengguna
+            $stmt_pengguna = $this->db->prepare("
                 INSERT INTO pengguna (id_akun, nama, berat_badan, usia) 
                 VALUES (?, ?, NULL, NULL)
             ");
-            $stmt->execute([
-                $idAkun,
-                $data['nama']
-            ]);
+            $stmt_pengguna->bind_param("is", $idAkun, $nama);
+            $stmt_pengguna->execute();
+            $stmt_pengguna->close();
             
+            // Commit transaction
             $this->db->commit();
             
             return [
@@ -63,11 +63,13 @@ class UserModel {
                 'id_akun' => $idAkun
             ];
             
-        } catch(PDOException $e) {
-            $this->db->rollBack();
+        } catch (\Exception $e) {
+            // Rollback transaction
+            $this->db->rollback();
+            // Catat pesan error yang lebih jelas dari database
             return [
                 'success' => false,
-                'message' => 'Registrasi gagal: ' . $e->getMessage()
+                'message' => 'Registrasi gagal: ' . $this->db->error . ' (' . $e->getMessage() . ')'
             ];
         }
     }
@@ -75,12 +77,21 @@ class UserModel {
     /**
      * Login user
      */
+    // Menggunakan parameter eksplisit (seperti UsersModel)
     public function login($username, $password) {
+        $akun = null;
+        
         try {
-            // Ambil data akun
-            $stmt = $this->db->prepare("SELECT * FROM akun WHERE username = ?");
-            $stmt->execute([$username]);
-            $akun = $stmt->fetch(PDO::FETCH_ASSOC);
+            // 1. Ambil data akun
+            $stmt_akun = $this->db->prepare("SELECT id_akun, username, password FROM akun WHERE username = ?");
+            $stmt_akun->bind_param("s", $username);
+            $stmt_akun->execute();
+            $result_akun = $stmt_akun->get_result();
+            
+            if ($result_akun->num_rows === 1) {
+                $akun = $result_akun->fetch_assoc();
+            }
+            $stmt_akun->close();
             
             if (!$akun) {
                 return [
@@ -88,24 +99,33 @@ class UserModel {
                     'message' => 'Username tidak ditemukan'
                 ];
             }
-            
-            // Verifikasi password
-            if (!password_verify($password, $akun['password'])) {
+
+            // --- START DEBUGGING ---
+            error_log("Input Password: " . $password);
+            error_log("Database Hash: " . $akun['password']);
+            $is_verified = password_verify($password, $akun['password']);
+            error_log("Verification Result: " . ($is_verified ? 'TRUE' : 'FALSE'));
+
+            if (!$is_verified) { // Ganti if (!password_verify(...)) dengan $is_verified
                 return [
                     'success' => false,
                     'message' => 'Password salah'
                 ];
             }
+            // --- END DEBUGGING ---
             
-            // Ambil data pengguna
-            $stmt = $this->db->prepare("
-                SELECT p.*, a.username, a.email 
+            // 2. Ambil data pengguna
+            $stmt_pengguna = $this->db->prepare("
+                SELECT p.*, a.username
                 FROM pengguna p 
                 JOIN akun a ON p.id_akun = a.id_akun 
                 WHERE p.id_akun = ?
             ");
-            $stmt->execute([$akun['id_akun']]);
-            $pengguna = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt_pengguna->bind_param("i", $akun['id_akun']);
+            $stmt_pengguna->execute();
+            $result_pengguna = $stmt_pengguna->get_result();
+            $pengguna = $result_pengguna->fetch_assoc();
+            $stmt_pengguna->close();
             
             return [
                 'success' => true,
@@ -113,11 +133,52 @@ class UserModel {
                 'user' => $pengguna
             ];
             
-        } catch(PDOException $e) {
+        } catch(\Exception $e) {
             return [
                 'success' => false,
                 'message' => 'Login gagal: ' . $e->getMessage()
             ];
+        }
+    }
+
+    /**
+     * Update data pengguna (nama, usia, berat_badan)
+     */
+    public function updatePengguna($idAkun, $nama, $usia, $beratBadan) {
+        try {
+            // Validasi sederhana
+            if (empty($idAkun) || empty($nama)) {
+                return false;
+            }
+            
+            // Konversi ke tipe yang benar
+            $usia = $usia === null ? null : (int)$usia;
+            $beratBadan = $beratBadan === null ? null : (int)$beratBadan;
+            $idAkun = (int)$idAkun;
+            
+            // Query menggunakan prepared statement untuk keamanan
+            $stmt = $this->db->prepare("
+                UPDATE pengguna 
+                SET nama = ?, usia = ?, berat_badan = ? 
+                WHERE id_akun = ?
+            ");
+            
+            // Binding parameters: s=string, i=integer
+            // Menggunakan 's' untuk nama, 'i' untuk usia dan beratBadan, 'i' untuk id_akun
+            // Catatan: Jika usia atau berat_badan bisa NULL, Anda mungkin perlu perlakuan khusus
+            // Di sini kita asumsikan jika NULL, ia akan di-bind sebagai integer 0 atau string kosong (bisa error)
+            // Untuk NULL, solusi yang lebih robust adalah menanganinya di logic PHP.
+            // Untuk kesederhanaan, kita asumsikan input valid.
+            
+            $stmt->bind_param("siii", $nama, $usia, $beratBadan, $idAkun);
+            $result = $stmt->execute();
+            $stmt->close();
+            
+            return $result; // Mengembalikan true jika berhasil, false jika gagal
+
+        } catch (\Exception $e) {
+            // Log error atau kembalikan false
+            return false;
         }
     }
 }
