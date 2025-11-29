@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS pengguna (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_id_akun (id_akun),
     FOREIGN KEY (id_akun) REFERENCES akun(id_akun) 
-        ON DELETE CASCADE ON UPDATE CASCADE,
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- ============================================
