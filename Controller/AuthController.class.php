@@ -1,13 +1,16 @@
 <?php
 
-require_once __DIR__ . '/../Model/UserModel.class.php';
+require_once 'Controller.class.php'; 
+// Catatan: Karena AuthController menggunakan $this->model('UserModel'), 
+// require_once UserModel.class.php tidak diperlukan di sini.
 
-class AuthController {
+class Auth extends Controller {
     
     private $userModel;
     
     public function __construct() {
-        $this->userModel = new UserModel();
+        // Menginstansiasi UserModel melalui method model() untuk memastikan Model.class.php dimuat
+        $this->userModel = $this->model('UserModel'); 
         
         // Start session jika belum
         if (session_status() === PHP_SESSION_NONE) {
@@ -16,106 +19,103 @@ class AuthController {
     }
     
     /**
-     * Tampilkan halaman sign in
+     * Memproses pendaftaran akun baru (Mirip Users::register)
+     * URL: index.php?c=Auth&m=register
      */
-    public function showSignIn() {
-        require_once __DIR__ . '/../View/signinpage.php';
-    }
-    
-    /**
-     * Tampilkan halaman sign up
-     */
-    public function showSignUp() {
-        require_once __DIR__ . '/../View/signuppage.php';
-    }
-    
-    /**
-     * Proses sign in
-     */
-    public function processSignIn() {
-        header('Content-Type: application/json');
-        
-        $username = isset($_POST['username']) ? trim($_POST['username']) : '';
-        $password = isset($_POST['password']) ? $_POST['password'] : '';
-        $remember = isset($_POST['remember']) ? true : false;
-        
-        if (empty($username) || empty($password)) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Username dan password harus diisi'
-            ]);
-            return;
-        }
-        
-        $result = $this->userModel->login($username, $password);
-        
-        if ($result['success']) {
-            $_SESSION['id_pengguna'] = $result['user']['id_pengguna'];
-            $_SESSION['id_akun'] = $result['user']['id_akun'];
-            $_SESSION['username'] = $result['user']['username'];
-            $_SESSION['nama'] = $result['user']['nama'];
+    public function register() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
-            if ($remember) {
-                setcookie('id_pengguna', $result['user']['id_pengguna'], time() + (86400 * 30), '/');
+            $nama = $_POST['nama'] ?? '';
+            $username = $_POST['username'] ?? '';
+            $password = $_POST['password'] ?? '';
+            
+            if (empty($nama) || empty($username) || empty($password)) {
+                // Tampilkan kembali form dengan pesan error
+                $message = ['message' => 'Semua field harus diisi'];
+                $this->view('signuppage', $message); 
+                return;
             }
+            
+            // Panggil UserModel::register dengan parameter eksplisit
+            $result = $this->userModel->register($nama, $username, $password);
+            
+            if ($result['success']) {
+                // Redirect jika berhasil, mirip Users::register
+                header('Location: index.php?c=Auth&m=login');
+                exit();
+            } else {
+                // Tampilkan kembali form dengan pesan error
+                $message = ['message' => $result['message']];
+                $this->view('signuppage', $message);
+            }
+            
+        } else {
+            // Tampilkan form registrasi (signuppage.php)
+            $this->view('signuppage'); 
         }
-        
-        echo json_encode($result);
     }
     
     /**
-     * Proses sign up
+     * Memverifikasi data login dan membuat sesi (Mirip Users::login)
+     * URL: index.php?c=Auth&m=login
      */
-   public function processSignUp() {
-    header('Content-Type: application/json');
-    
-    $data = [
-        'nama' => isset($_POST['nama']) ? trim($_POST['nama']) : '',
-        'username' => isset($_POST['username']) ? trim($_POST['username']) : '',
-        'password' => isset($_POST['password']) ? $_POST['password'] : '',
-        'email' => isset($_POST['email']) ? trim($_POST['email']) : ''
-    ];
-    
-    if (empty($data['nama']) || empty($data['username']) || empty($data['password'])) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Nama, username, dan password harus diisi'
-        ]);
-        return;
+    public function login() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            
+            $username = $_POST['username'] ?? '';
+            $password = $_POST['password'] ?? '';
+            $remember = isset($_POST['remember']) ? true : false;
+            
+            if (empty($username) || empty($password)) {
+                // Tampilkan kembali form dengan pesan error
+                $message = ['message' => 'Username dan password harus diisi'];
+                $this->view('signinpage', $message);
+                return;
+            }
+            
+            $result = $this->userModel->login($username, $password);
+            
+            // Hapus semua session dan redirect logic, ganti dengan JSON Response
+            if ($result['success']) {
+                // Buat sesi
+                $_SESSION['id_pengguna'] = $result['user']['id_pengguna'];
+                $_SESSION['id_akun'] = $result['user']['id_akun'];
+                $_SESSION['username'] = $result['user']['username'];
+                $_SESSION['nama'] = $result['user']['nama'];
+                
+                // Jika login berhasil, kembalikan JSON sukses
+                $this->jsonResponse([
+                    'success' => true,
+                    'message' => 'Login berhasil',
+                    'redirect' => 'index.php?c=Tracking&m=index' // Memberi tahu klien ke mana harus redirect
+                ]);
+                
+            } else {
+                // Jika login gagal, kembalikan JSON error
+                $this->jsonResponse([
+                    'success' => false,
+                    'message' => $result['message']
+                ]);
+            }
+            
+        } else {
+            // Tampilkan form login
+            $this->view('signinpage'); 
+        }
     }
-    
-    if (empty($data['email'])) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Email harus diisi'
-        ]);
-        return;
-    }
-    
-    $result = $this->userModel->register($data);
-    
-    // Tambahkan redirect URL jika berhasil
-    if ($result['success']) {
-        $result['redirect_url'] = 'index.php?c=Auth&m=showSignIn';
-    }
-    
-    echo json_encode($result);
-    // ✅ JANGAN pakai require_once atau header redirect di sini!
-}
     
     /**
-     * Logout
+     * Logout (Mirip Users::logout)
      */
     public function logout() {
         session_destroy();
         setcookie('id_pengguna', '', time() - 3600, '/');
-        header('Location: index.php?c=Auth&m=showSignIn');
+        // Redirect ke halaman login
+        header('Location: index.php?c=Auth&m=login');
         exit;
     }
     
-    /**
-     * Cek apakah user sudah login
-     */
+    // ... method lain (isLoggedIn)
     public function isLoggedIn() {
         return isset($_SESSION['id_pengguna']);
     }
