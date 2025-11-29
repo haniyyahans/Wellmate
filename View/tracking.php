@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -61,6 +62,21 @@
                 <a href="index.php?c=Laporan" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
                     <i class="fas fa-chart-bar"></i>
                     <span>Laporan dan Analisis</span>
+                </a>
+
+                <a href="index.php?c=News&m=index" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Berita dan Edukasi</span>
+                </a>
+
+                <a href="index.php?c=Friend&m=index" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-users"></i>
+                    <span>Teman</span>
+                </a>
+
+                <a href="index.php?c=Settings&m=index" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
                 </a>
             </nav>
 
