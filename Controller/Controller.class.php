@@ -16,4 +16,38 @@ class Controller
         }
         include 'view/' . $viewName . '.php';
     }
+
+    function startSession() {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
+    
+    function setSession($key, $value) {
+        $this->startSession();
+        $_SESSION[$key] = $value;
+    }
+    
+    function getSession($key) {
+        $this->startSession();
+        return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
+    }
+    
+    function removeSession($key) {
+        $this->startSession();
+        if (isset($_SESSION[$key])) {
+            unset($_SESSION[$key]);
+        }
+    }
+    
+    function redirect($url) {
+        header("Location: $url");
+        exit;
+    }
+    
+    function jsonResponse($data) {
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
+    }
 }
