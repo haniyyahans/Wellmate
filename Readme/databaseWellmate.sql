@@ -7,6 +7,16 @@ CREATE DATABASE IF NOT EXISTS wellmate;
 USE wellmate;
 
 -- ============================================
+-- TABEL AKUN
+-- ============================================
+CREATE TABLE akun (
+    id_akun INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(30) NOT NULL,
+    password VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL
+);
+
+-- ============================================
 -- TABEL PENGGUNA
 -- ============================================
 CREATE TABLE IF NOT EXISTS pengguna (
@@ -223,3 +233,139 @@ INSERT INTO teman (id_pengguna, id_user_teman, status, tanggal) VALUES
 -- Permintaan yang ditolak
 (3, 5, 'declined', '2025-01-13'),
 (4, 6, 'declined', '2025-01-12');
+
+-- ============================================
+-- TABEL BERITA_EDUKASI
+-- ============================================
+CREATE TABLE berita_edukasi (
+    id_berita INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT NOT NULL,
+    judul VARCHAR(150) NOT NULL,
+    isi TEXT NOT NULL,
+    kategori VARCHAR(50),
+    tanggal_publish TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    sumber VARCHAR(50),
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
+);
+
+-- ============================================
+-- TABEL RIWAYAT_BACA
+-- ============================================
+CREATE TABLE riwayat_baca (
+    id_riwayat INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT NOT NULL,
+    id_berita INT NOT NULL,
+    waktu_baca TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna),
+    FOREIGN KEY (id_berita) REFERENCES berita_edukasi(id_berita)
+);
+
+-- ============================================
+-- INSERT DATA DUMMY - BERITA_EDUKASI
+-- ============================================
+INSERT INTO berita_edukasi (id_pengguna, judul, isi, kategori, sumber)
+VALUES
+(1,'"Mengapa Air Putih Menjadi Kunci Utama Kesehatan Tubuh?"',
+'Dalam kehidupan sehari-hari, air putih sering kali dianggap sepele, padahal perannnya sangat penting bagi kesehatan tubuh manusia. Berdasarkan laporan dari Kementerian Kesehatan RI, lebih dari 60% komposisi tubuh manusia terdiri dari air. Hal ini menjadikan air sebagai komponen vital dalam menjaga fungsi organ, mengatur suhu tubuh, serta membantu proses metabolisme.
+Para ahli gizi menekankan bahwa kekurangan cairan dapat menyebabkan dehidrasi, yang ditandai dengan gejala seperti kelelahan, sakit kepala, dan menurunnya konsentrasi. Dalam jangka panjang, dehidrasi kronis dapat meningkatkan risiko gangguan ginjal, infeksi saluran kemih, hingga masalah pada kulit.
+Menurut penelitian yang diterbitkan oleh World Health Organization (WHO), kebutuhan air harian untuk orang dewasa rata-rata adalah 2-2,5 liter per hari, tergantung aktivitas fisik dan kondisi lingkungan. Minum air putih secara cukup terbukti membantu meningkatkan energi, menjaga sistem pencernaan, serta membuang racun dari dalam tubuh melalui urin dan keringat.
+Selain itu, air putih juga berperan penting dalam menjaga keseimbangan elektrolit. Ketika tubuh kekurangan cairan, keseimbangan elektrolit terganggu dan dapat menyebabkan kram otot atau gangguan pada sistem saraf.
+Untuk itu, para pakar kesehatan menyarankan agar masyarakat membiasakan minum air putih secara teratur, bahkan sebelum merasa haus. Kebiasaan sederhana ini dapat menjadi langkah awal menuju hidup yang lebih sehat.
+Tips Edukasi:
+- Bawalah botol air minum sendiri untuk memantau asupan harian.
+- Minum segelas air setelah bangun tidur dan sebelum tidur malam.
+- Kurangi minuman manis dan berkafein yang dapat menyebabkan dehidrasi.
+- Gunakan aplikasi pengingat minum jika sering lupa.',
+'Kesehatan dan hidrasi',
+'World Health Organization (WHO)'),
+(1,'"Berapa Banyak Air yang Ideal Diminum Setiap Hari?"','kosong','Edukasi dan fakta sains','kosong'),
+(1,'"Dampak Dehidrasi Ringan terhadap Konsentrasi dan Produktivitas"',
+'Penelitian menunjukkan bahwa dehidrasi ringan—bahkan hanya 1–2% kehilangan cairan tubuh—dapat menurunkan fokus, memperlambat kemampuan berpikir, dan membuat seseorang lebih cepat lelah saat bekerja. Kondisi ini sering tidak disadari karena gejalanya muncul perlahan, seperti sakit kepala ringan dan sulit berkonsentrasi. Tetap menjaga asupan air sepanjang hari menjadi langkah penting untuk mempertahankan produktivitas.',
+'Kesehatan dan hidrasi',
+'World Health Organization (WHO)'),
+(1,'"Fakta Menarik: Minum Air Bisa Meningkatkan Fokus dan Suasana Hati"',
+'Studi kesehatan menunjukkan bahwa hidrasi yang cukup membantu meningkatkan fungsi kognitif, termasuk fokus dan kewaspadaan. Selain itu, minum air dalam jumlah cukup juga berpengaruh pada suasana hati, membantu mengurangi rasa lelah dan iritabilitas yang sering muncul akibat kekurangan cairan.',
+'Edukasi dan fakta sains',
+'Centers for Disease Control and Prevention (CDC)'),
+(1,'"Air vs Minuman Manis: Mana yang Lebih Baik untuk Tubuh?"',
+'Minuman manis dapat memberikan energi cepat, tetapi konsumsi berlebih meningkatkan risiko obesitas dan gangguan metabolik. Sebaliknya, air putih menyediakan hidrasi optimal tanpa kalori maupun gula tambahan. Karena itu, para ahli kesehatan merekomendasikan air sebagai pilihan utama untuk memenuhi kebutuhan cairan harian.',
+'Nutrisi dan gaya hidup sehat',
+'World Health Organization (WHO)'),
+(1,'"Tips Menjaga Asupan Cairan Selama Aktivitas Fisik"',
+'Ketika berolahraga, tubuh kehilangan cairan lebih cepat melalui keringat. Untuk mencegah dehidrasi, disarankan minum air sebelum, selama, dan setelah aktivitas fisik. Jika olahraga dilakukan dalam durasi panjang atau cuaca panas, penambahan elektrolit mungkin diperlukan untuk menjaga keseimbangan tubuh.',
+'Nutrisi dan gaya hidup sehat',
+'American College of Sports Medicine (ACSM)'),
+(1,'"Kebiasaan Sehat yang Bisa Membantu Kamu Lebih Rajin Minum Air"',
+'Beberapa kebiasaan sederhana seperti membawa botol minum, mengatur pengingat di ponsel, atau memulai hari dengan segelas air dapat membantu meningkatkan konsumsi cairan harian. Mengganti minuman manis dengan air secara bertahap juga efektif membuat tubuh terbiasa dengan hidrasi yang sehat.',
+'Nutrisi dan gaya hidup sehat',
+'Centers for Disease Control and Prevention (CDC)'),
+(1,'"Mitos dan Fakta Tentang Air: Tidak Semua Informasi di Internet Benar!"',
+'Banyak informasi keliru tentang konsumsi air, seperti "semua orang harus minum 8 gelas per hari". Faktanya, kebutuhan cairan berbeda bagi setiap orang berdasarkan aktivitas, usia, dan kondisi kesehatan. Oleh karena itu, penting memeriksa informasi kesehatan dari sumber tepercaya sebelum mempercayainya.',
+'Edukasi dan fakta sains',
+'National Institutes of Health (NIH)');
+
+-- ============================================
+-- TABEL RIWAYAT_MINUM
+-- ============================================
+CREATE TABLE riwayat_minum (
+    id_riwayat INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT NOT NULL,
+    total_harian DECIMAL(10,2) NULL,
+    tanggal TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    persentase_target DECIMAL(5,2) NULL,
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
+);
+
+-- ============================================
+-- TABEL LAPORAN
+-- ============================================
+CREATE TABLE laporan (
+    id_laporan INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT NOT NULL,
+    jenis_laporan VARCHAR(100) NULL,
+    periode INT NULL,
+    jumlah_konsumsi INT NULL,
+    persentase DECIMAL(5,2) NULL,
+    kategori_pencapaian VARCHAR(50) NULL,
+    analisis_pencapaian VARCHAR(1000) NULL,
+    rekomendasi VARCHAR(500) NULL,
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
+);
+
+-- ============================================
+-- INSERT DATA DUMMY - RIWAYAT_MINUM
+-- ============================================
+INSERT INTO riwayat_minum (id_pengguna, total_harian, tanggal, persentase_target)
+VALUES
+-- MINGGU 1 (7 hari yang lalu sampai 21 hari yang lalu) - Total: 12.600 ml
+(1, 1800, DATE_SUB(NOW(), INTERVAL 27 DAY), 90.00),   -- Senin
+(1, 1600, DATE_SUB(NOW(), INTERVAL 26 DAY), 80.00),   -- Selasa
+(1, 2000, DATE_SUB(NOW(), INTERVAL 25 DAY), 100.00),  -- Rabu
+(1, 1500, DATE_SUB(NOW(), INTERVAL 24 DAY), 75.00),   -- Kamis
+(1, 1900, DATE_SUB(NOW(), INTERVAL 23 DAY), 95.00),   -- Jumat
+(1, 2100, DATE_SUB(NOW(), INTERVAL 22 DAY), 105.00),  -- Sabtu
+(1, 1700, DATE_SUB(NOW(), INTERVAL 21 DAY), 85.00),   -- Minggu
+-- MINGGU 2 (14 hari yang lalu sampai 20 hari yang lalu) - Total: 14.600 ml
+(1, 2086, DATE_SUB(NOW(), INTERVAL 20 DAY), 104.30),
+(1, 2086, DATE_SUB(NOW(), INTERVAL 19 DAY), 104.30),
+(1, 2086, DATE_SUB(NOW(), INTERVAL 18 DAY), 104.30),
+(1, 2086, DATE_SUB(NOW(), INTERVAL 17 DAY), 104.30),
+(1, 2086, DATE_SUB(NOW(), INTERVAL 16 DAY), 104.30),
+(1, 2085, DATE_SUB(NOW(), INTERVAL 15 DAY), 104.25),
+(1, 2085, DATE_SUB(NOW(), INTERVAL 14 DAY), 104.25),
+-- MINGGU 3 (7 hari yang lalu sampai 13 hari yang lalu) - Total: 14.800 ml
+(1, 2115, DATE_SUB(NOW(), INTERVAL 13 DAY), 105.75),
+(1, 2115, DATE_SUB(NOW(), INTERVAL 12 DAY), 105.75),
+(1, 2114, DATE_SUB(NOW(), INTERVAL 11 DAY), 105.70),
+(1, 2114, DATE_SUB(NOW(), INTERVAL 10 DAY), 105.70),
+(1, 2114, DATE_SUB(NOW(), INTERVAL 9 DAY), 105.70),
+(1, 2114, DATE_SUB(NOW(), INTERVAL 8 DAY), 105.70),
+(1, 2114, DATE_SUB(NOW(), INTERVAL 7 DAY), 105.70),
+-- MINGGU 4 (Total: 15.250 ml)
+(1, 1950, DATE_SUB(NOW(), INTERVAL 6 DAY), 97.50),   -- Senin
+(1, 1980, DATE_SUB(NOW(), INTERVAL 5 DAY), 99.00),   -- Selasa
+(1, 2050, DATE_SUB(NOW(), INTERVAL 4 DAY), 102.50),  -- Rabu
+(1, 2150, DATE_SUB(NOW(), INTERVAL 3 DAY), 107.50),  -- Kamis
+(1, 2400, DATE_SUB(NOW(), INTERVAL 2 DAY), 120.00),  -- Jumat
+(1, 2400, DATE_SUB(NOW(), INTERVAL 1 DAY), 120.00),  -- Sabtu
+(1, 2320, NOW(), 116.00);                            -- Minggu
