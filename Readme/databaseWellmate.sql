@@ -9,11 +9,10 @@ USE wellmate;
 -- ============================================
 -- TABEL AKUN
 -- ============================================
-CREATE TABLE akun (
+CREATE TABLE IF NOT EXISTS akun (
     id_akun INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(30) NOT NULL,
-    password VARCHAR(20) NOT NULL,
-    email VARCHAR(100) NOT NULL
+    password VARCHAR(20) NOT NULL
 );
 
 -- ============================================
@@ -27,7 +26,9 @@ CREATE TABLE IF NOT EXISTS pengguna (
     usia INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_id_akun (id_akun)
+    INDEX idx_id_akun (id_akun),
+    FOREIGN KEY (id_akun) REFERENCES akun(id_akun) 
+        ON DELETE CASCADE ON UPDATE CASCADE,
 );
 
 -- ============================================
