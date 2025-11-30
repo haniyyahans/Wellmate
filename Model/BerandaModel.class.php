@@ -1,34 +1,44 @@
 <?php
-
 require_once __DIR__ . '/Model.class.php';
 
-class BioModel extends Model {
+class BerandaModel extends Model { 
     
     /**
-     * Menambah biodata user baru
-     * 
-     * @param array $data Array berisi data biodata (user_id, nama, berat_badan, tinggi_badan, usia, jenis_kelamin)
-     * @return array Response dengan status success/fail
+     * Mengambil biodata berdasarkan id_pengguna
+     */
+    public function getBiodataByIdPengguna($id_pengguna) {
+        try {
+            $id_pengguna = intval($id_pengguna);
+            $sql = "SELECT * FROM pengguna WHERE id_pengguna = $id_pengguna";
+            $result = $this->db->query($sql);
+            
+            if ($result && $result->num_rows > 0) {
+                return $result->fetch_assoc();
+            }
+            
+            return null;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+    
+    /**
+     * Menambah atau update biodata user
      */
     public function tambahBiodata($data) {
         try {
-            // Validasi input
-            if (empty($data['user_id']) || empty($data['nama']) || empty($data['berat_badan'])) {
+            if (empty($data['id_pengguna']) || empty($data['nama']) || empty($data['berat_badan'])) {
                 return [
                     'success' => false,
-                    'message' => 'Data user_id, nama, dan berat_badan wajib diisi'
+                    'message' => 'Data id_pengguna, nama, dan berat_badan wajib diisi'
                 ];
             }
             
-            // Escape data untuk keamanan
-            $user_id = $this->escape($data['user_id']);
+            $id_pengguna = intval($data['id_pengguna']);
             $nama = $this->escape($data['nama']);
             $berat_badan = floatval($data['berat_badan']);
-            $tinggi_badan = isset($data['tinggi_badan']) ? floatval($data['tinggi_badan']) : null;
             $usia = isset($data['usia']) ? intval($data['usia']) : null;
-            $jenis_kelamin = isset($data['jenis_kelamin']) ? $this->escape($data['jenis_kelamin']) : null;
             
-            // Validasi berat badan
             if ($berat_badan <= 0 || $berat_badan > 300) {
                 return [
                     'success' => false,
@@ -36,30 +46,30 @@ class BioModel extends Model {
                 ];
             }
             
-            // Query insert
-            $sql = "INSERT INTO biodata (user_id, nama, berat_badan, tinggi_badan, usia, jenis_kelamin, created_at) 
-                    VALUES ('$user_id', '$nama', $berat_badan, " . 
-                    ($tinggi_badan ? $tinggi_badan : "NULL") . ", " .
-                    ($usia ? $usia : "NULL") . ", " .
-                    ($jenis_kelamin ? "'$jenis_kelamin'" : "NULL") . ", NOW())";
+            // Cek apakah data sudah ada
+            $checkSql = "SELECT id_pengguna FROM pengguna WHERE id_pengguna = $id_pengguna";
+            $checkResult = $this->db->query($checkSql);
             
-            $result = $this->query($sql);
+            if ($checkResult->num_rows > 0) {
+                // Update jika sudah ada
+                return $this->updateBiodata($id_pengguna, $data);
+            }
+            
+            // Insert jika belum ada (ini untuk kasus khusus)
+            $sql = "UPDATE pengguna SET 
+                    nama = '$nama', 
+                    berat_badan = $berat_badan, 
+                    usia = " . ($usia ? $usia : "NULL") . ",
+                    updated_at = NOW()
+                    WHERE id_pengguna = $id_pengguna";
+            
+            $result = $this->db->query($sql);
             
             if ($result) {
-                $insert_id = $this->db->insert_id;
-                
                 return [
                     'success' => true,
                     'message' => 'Biodata berhasil ditambahkan',
-                    'data' => [
-                        'id' => $insert_id,
-                        'user_id' => $user_id,
-                        'nama' => $nama,
-                        'berat_badan' => $berat_badan,
-                        'tinggi_badan' => $tinggi_badan,
-                        'usia' => $usia,
-                        'jenis_kelamin' => $jenis_kelamin
-                    ]
+                    'data' => $this->getBiodataByIdPengguna($id_pengguna)
                 ];
             } else {
                 return [
@@ -67,7 +77,6 @@ class BioModel extends Model {
                     'message' => 'Gagal menambahkan biodata'
                 ];
             }
-            
         } catch (Exception $e) {
             return [
                 'success' => false,
@@ -78,31 +87,26 @@ class BioModel extends Model {
     
     /**
      * Update biodata user yang sudah ada
-     * 
-     * @param int $id ID biodata yang akan diupdate
-     * @param array $data Array berisi data yang akan diupdate
-     * @return array Response dengan status success/fail
      */
-    public function updateBiodata($id, $data) {
+    public function updateBiodata($id_pengguna, $data) {
         try {
-            // Validasi ID
-            if (empty($id)) {
+            if (empty($id_pengguna)) {
                 return [
                     'success' => false,
-                    'message' => 'ID biodata tidak ditemukan'
+                    'message' => 'ID pengguna tidak ditemukan'
                 ];
             }
             
-            $id = intval($id);
+            $id_pengguna = intval($id_pengguna);
             
-            // Cek apakah biodata ada
-            $checkSql = "SELECT id FROM biodata WHERE id = $id";
-            $checkResult = $this->query($checkSql);
+            // Cek apakah pengguna ada
+            $checkSql = "SELECT id_pengguna FROM pengguna WHERE id_pengguna = $id_pengguna";
+            $checkResult = $this->db->query($checkSql);
             
             if ($checkResult->num_rows == 0) {
                 return [
                     'success' => false,
-                    'message' => 'Biodata dengan ID tersebut tidak ditemukan'
+                    'message' => 'Pengguna dengan ID tersebut tidak ditemukan'
                 ];
             }
             
@@ -121,19 +125,9 @@ class BioModel extends Model {
                 }
             }
             
-            if (isset($data['tinggi_badan'])) {
-                $tinggi_badan = floatval($data['tinggi_badan']);
-                $updateFields[] = "tinggi_badan = " . ($tinggi_badan > 0 ? $tinggi_badan : "NULL");
-            }
-            
             if (isset($data['usia'])) {
                 $usia = intval($data['usia']);
                 $updateFields[] = "usia = " . ($usia > 0 ? $usia : "NULL");
-            }
-            
-            if (isset($data['jenis_kelamin'])) {
-                $jenis_kelamin = $this->escape($data['jenis_kelamin']);
-                $updateFields[] = "jenis_kelamin = " . (!empty($jenis_kelamin) ? "'$jenis_kelamin'" : "NULL");
             }
             
             if (empty($updateFields)) {
@@ -143,24 +137,16 @@ class BioModel extends Model {
                 ];
             }
             
-            // Tambahkan updated_at
             $updateFields[] = "updated_at = NOW()";
             
-            // Query update
-            $sql = "UPDATE biodata SET " . implode(', ', $updateFields) . " WHERE id = $id";
-            
-            $result = $this->query($sql);
+            $sql = "UPDATE pengguna SET " . implode(', ', $updateFields) . " WHERE id_pengguna = $id_pengguna";
+            $result = $this->db->query($sql);
             
             if ($result) {
-                // Ambil data terbaru
-                $selectSql = "SELECT * FROM biodata WHERE id = $id";
-                $selectResult = $this->query($selectSql);
-                $updatedData = $selectResult->fetch_assoc();
-                
                 return [
                     'success' => true,
                     'message' => 'Biodata berhasil diupdate',
-                    'data' => $updatedData
+                    'data' => $this->getBiodataByIdPengguna($id_pengguna)
                 ];
             } else {
                 return [
@@ -168,7 +154,6 @@ class BioModel extends Model {
                     'message' => 'Gagal mengupdate biodata'
                 ];
             }
-            
         } catch (Exception $e) {
             return [
                 'success' => false,
@@ -179,19 +164,9 @@ class BioModel extends Model {
     
     /**
      * Menghitung target kebutuhan cairan harian berdasarkan berat badan
-     * Formula: 
-     * - Berat < 30kg: 100 ml/kg
-     * - Berat 30-50kg: 1500 ml + 50 ml untuk setiap kg di atas 20kg
-     * - Berat > 50kg: 2500 ml + 15 ml untuk setiap kg di atas 50kg
-     * Dengan penyesuaian berdasarkan tingkat aktivitas
-     * 
-     * @param float $beratBadan Berat badan dalam kg
-     * @param string $aktivitas Tingkat aktivitas (ringan/sedang/berat)
-     * @return array Response dengan hasil perhitungan
      */
     public function hitungKebutuhanCairan($beratBadan, $aktivitas = 'sedang') {
         try {
-            // Validasi input
             $beratBadan = floatval($beratBadan);
             
             if ($beratBadan <= 0 || $beratBadan > 300) {
@@ -226,10 +201,7 @@ class BioModel extends Model {
                     $faktorAktivitas = 1.2;
             }
             
-            // Hitung total kebutuhan
             $totalKebutuhan = round($kebutuhanDasar * $faktorAktivitas);
-            
-            // Konversi ke gelas (1 gelas = 250ml)
             $jumlahGelas = ceil($totalKebutuhan / 250);
             
             return [
@@ -245,7 +217,6 @@ class BioModel extends Model {
                     'rekomendasi' => "Disarankan minum $jumlahGelas gelas air per hari ($totalKebutuhan ml)"
                 ]
             ];
-            
         } catch (Exception $e) {
             return [
                 'success' => false,
