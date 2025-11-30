@@ -1,4 +1,3 @@
-
 <?php
 
 class TrackingModel extends Model {
@@ -23,35 +22,130 @@ class TrackingModel extends Model {
         }
     }
     
-    // Get user target harian
-    public function getTargetHarian($userId) { // parameter $userId tanpa default
+    // Get user target harian (UPDATED - menggunakan id_akun)
+    public function getTargetHarian($idAkun) {
         try {
-            $userId = $this->escape($userId);
-            $sql = "SELECT target_harian FROM user_target WHERE user_id = '$userId'";
+            $idAkun = $this->escape($idAkun);
+            
+            // Ambil target dari user_target
+            $sql = "SELECT ut.target_harian, p.berat_badan, p.usia
+                    FROM user_target ut
+                    LEFT JOIN pengguna p ON ut.id_akun = p.id_akun
+                    WHERE ut.id_akun = '$idAkun'";
+            
             $result = $this->query($sql);
             
             if ($result && $row = $result->fetch_assoc()) {
+                // Jika target_harian = 0 atau NULL, hitung ulang berdasarkan data pengguna
+                if (empty($row['target_harian']) || $row['target_harian'] == 0) {
+                    if (!empty($row['berat_badan']) && !empty($row['usia'])) {
+                        // Hitung target baru
+                        $targetBaru = $this->hitungTargetOtomatis($row['berat_badan'], $row['usia']);
+                        
+                        // Simpan target baru
+                        $this->updateTargetHarian($idAkun, $targetBaru);
+                        
+                        return $targetBaru;
+                    }
+                    // Jika data pengguna belum lengkap, return default
+                    return 0;
+                }
+                
                 return $row['target_harian'];
             }
             
-            return 0; // Default target jika data belum ada
+            // Jika belum ada record, cek data pengguna
+            $sqlPengguna = "SELECT berat_badan, usia FROM pengguna WHERE id_akun = '$idAkun'";
+            $resultPengguna = $this->query($sqlPengguna);
+            
+            if ($resultPengguna && $rowPengguna = $resultPengguna->fetch_assoc()) {
+                if (!empty($rowPengguna['berat_badan']) && !empty($rowPengguna['usia'])) {
+                    $targetBaru = $this->hitungTargetOtomatis($rowPengguna['berat_badan'], $rowPengguna['usia']);
+                    
+                    // Buat record baru di user_target
+                    $this->buatTargetBaru($idAkun, $targetBaru);
+                    
+                    return $targetBaru;
+                }
+            }
+            
+            return 0; // Default target jika data tidak lengkap
+
         } catch (Exception $e) {
             return 0;
         }
     }
     
-    // Get catatan minum by date
-    public function getCatatanMinumByDate($tanggal, $userId) { // parameter $userId tanpa default
+    // Method helper untuk menghitung target otomatis
+    private function hitungTargetOtomatis($beratBadan, $usia) {
+        if (empty($beratBadan) || empty($usia) || $beratBadan <= 0 || $usia <= 0) {
+            return 0;
+        }
+        
+        // Tentukan faktor pengali berdasarkan usia
+        $faktorPengali = 35;
+        
+        if ($usia >= 31 && $usia <= 55) {
+            $faktorPengali = 33;
+        } elseif ($usia > 55) {
+            $faktorPengali = 30;
+        }
+        
+        // Hitung target
+        $targetMinum = $beratBadan * $faktorPengali;
+        $targetMinum = round($targetMinum / 100) * 100;
+        
+        // Batasan minimal dan maksimal
+        if ($targetMinum < 1500) {
+            $targetMinum = 1500;
+        } elseif ($targetMinum > 5000) {
+            $targetMinum = 5000;
+        }
+        
+        return $targetMinum;
+    }
+    
+    // Method helper untuk update target harian
+    private function updateTargetHarian($idAkun, $targetHarian) {
+        try {
+            $idAkun = $this->escape($idAkun);
+            $targetHarian = $this->escape($targetHarian);
+            
+            $sql = "UPDATE user_target 
+                    SET target_harian = '$targetHarian',
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id_akun = '$idAkun'";
+            
+            return $this->query($sql);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
+    // Method helper untuk membuat target baru
+    private function buatTargetBaru($idAkun, $targetHarian) {
+        try {
+            $idAkun = $this->escape($idAkun);
+            $targetHarian = $this->escape($targetHarian);
+            
+            $sql = "INSERT INTO user_target (id_akun, user_id, target_harian) 
+                    VALUES ('$idAkun', '$idAkun', '$targetHarian')";
+            
+            return $this->query($sql);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
+    // Get catatan minum by date (UPDATED - menggunakan id_akun)
+    public function getCatatanMinumByDate($tanggal, $idAkun) {
         try {
             $tanggal = $this->escape($tanggal);
-            $userId = $this->escape($userId);
+            $idAkun = $this->escape($idAkun);
             
-            // Query filter berdasarkan user_id
-            $sql = "SELECT cm.id, cm.jumlah, cm.waktu, jm.nama as jenis_minuman, jm.warna
-                    FROM catatan_minum cm
-                    JOIN jenis_minuman jm ON cm.jenis_minuman_id = jm.id
-                    WHERE cm.user_id = '$userId' AND cm.tanggal = '$tanggal'
-                    ORDER BY cm.waktu DESC";
+            $sql = "SELECT * FROM catatan_minum 
+                    WHERE tanggal = '$tanggal' AND id_akun = '$idAkun'
+                    ORDER BY waktu ASC";
             
             $result = $this->query($sql);
             $data = [];
@@ -69,19 +163,25 @@ class TrackingModel extends Model {
         }
     }
     
-    // Add new catatan minum
-    public function tambahCatatanMinum($jenisMinumanId, $jumlah, $userId) { // parameter $userId tanpa default
+    // Add new catatan minum (UPDATED - menggunakan id_akun)
+    public function tambahCatatanMinum($jenis, $jumlah, $waktu, $tanggal, $idAkun) {
         try {
-            $jenisMinumanId = $this->escape($jenisMinumanId);
-            $jumlah = $this->escape($jumlah);
-            $userId = $this->escape($userId); // Pastikan user ID dinamis digunakan
-            $tanggal = date('Y-m-d');
-            $waktu = date('H:i:s');
-
-            $sql = "INSERT INTO catatan_minum (user_id, jenis_minuman_id, jumlah, tanggal, waktu) 
-                    VALUES ('$userId', '$jenisMinumanId', '$jumlah', '$tanggal', '$waktu')";
+            if (!$this->isConnected()) {
+                return false;
+            }
             
-            return $this->query($sql);
+            $jenis = $this->escape($jenis);
+            $jumlah = $this->escape($jumlah);
+            $waktu = $this->escape($waktu);
+            $tanggal = $this->escape($tanggal);
+            $idAkun = $this->escape($idAkun);
+            
+            $sql = "INSERT INTO catatan_minum (id_akun, user_id, jenis, jumlah, waktu, tanggal) 
+                    VALUES ('$idAkun', '$idAkun', '$jenis', '$jumlah', '$waktu', '$tanggal')";
+            
+            $result = $this->query($sql);
+            
+            return ($result && $this->db !== null) ? $this->db->insert_id : false;
 
         } catch (Exception $e) {
             return false;
@@ -108,13 +208,10 @@ class TrackingModel extends Model {
     }
     
     // Delete catatan minum
-    public function hapusCatatanMinum($id, $userId) { // Tambahkan $userId untuk filter keamanan
+    public function hapusCatatanMinum($id) {
         try {
             $id = $this->escape($id);
-            $userId = $this->escape($userId);
-            
-            // Hapus berdasarkan ID catatan DAN user_id
-            $sql = "DELETE FROM catatan_minum WHERE id = '$id' AND user_id = '$userId'";
+            $sql = "DELETE FROM catatan_minum WHERE id = '$id'";
             
             return $this->query($sql);
 
@@ -123,21 +220,29 @@ class TrackingModel extends Model {
         }
     }
     
-    // Get statistics for today
-    public function getStatistikHariIni($userId) { // parameter $userId tanpa default
+    // Get statistics for today (UPDATED - menggunakan id_akun)
+    public function getStatistikHariIni($idAkun) {
         try {
-            $userId = $this->escape($userId);
+            $idAkun = $this->escape($idAkun);
             $today = date('Y-m-d');
             
             $sql = "SELECT 
                         SUM(jumlah) as total_diminum,
                         COUNT(*) as jumlah_catatan
                     FROM catatan_minum 
-                    WHERE user_id = '$userId' AND tanggal = '$today'";
+                    WHERE id_akun = '$idAkun' AND tanggal = '$today'";
             
-            // ... rest of the code
+            $result = $this->query($sql);
+            
+            if ($result && $row = $result->fetch_assoc()) {
+                return [
+                    'total_diminum' => $row['total_diminum'] ?? 0,
+                    'jumlah_catatan' => $row['jumlah_catatan'] ?? 0
+                ];
+            }
             
             return ['total_diminum' => 0, 'jumlah_catatan' => 0];
+
         } catch (Exception $e) {
             return ['total_diminum' => 0, 'jumlah_catatan' => 0];
         }
