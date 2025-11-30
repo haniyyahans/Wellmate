@@ -1,54 +1,60 @@
-
 <?php
 
 class Tracking extends Controller {
     private $trackingModel;
+    private $penggunaModel;
     
     public function __construct() {
         $this->trackingModel = $this->model('TrackingModel');
+        $this->penggunaModel = $this->model('PenggunaModel');
         $this->startSession(); // spy bisa baca user id
+
+        if (!$this->getSession('id_akun')) {
+        $this->setSession('id_akun', 1); // Ganti dengan ID yang ada di database
+    }
     }
     
     // Method default untuk menampilkan halaman tracking
     public function index() {
         try {
-            // Ganti 'user_id' menjadi 'id_pengguna' dan hapus default 1
-            $userId = $this->getSession('id_pengguna');
-            
-            // Enforce login: Jika user ID kosong, redirect ke halaman login
-            if (empty($userId)) {
-                $this->redirect('index.php?c=Auth&m=login');
-                return;
-            }
-            
-            // // Inisialisasi target user, target akan 2500 (default) jika belum ada data
-            // $this->trackingModel->inisialisasiTargetUser($userId); 
+            $idAkun = $this->getSession('id_akun');
+
+            // if (!$idAkun) {
+            //     // Redirect ke login jika belum login
+            //     $this->redirect('index.php?c=Auth&m=login');
+            //     return;
+            // }
 
             $today = date('Y-m-d');
             
-            // Minta data dengan user ID yang dinamis
+            $dataPengguna = $this->penggunaModel->getDataPengguna($idAkun);
+            $namaPengguna = $dataPengguna ? $dataPengguna['nama'] : 'Pengguna';
+            // minta data yg diperlukan ke model
             $jenisMinuman = $this->trackingModel->getJenisMinuman();
-            $targetHarian = $this->trackingModel->getTargetHarian($userId); // Pass $userId
-            $catatanMinum = $this->trackingModel->getCatatanMinumByDate($today, $userId); // Pass $userId
-            $statistik = $this->trackingModel->getStatistikHariIni($userId); // Pass $userId
+            $targetHarian = $this->trackingModel->getTargetHarian($idAkun);
+            $catatanMinum = $this->trackingModel->getCatatanMinumByDate($today, $idAkun);
+            $statistik = $this->trackingModel->getStatistikHariIni($idAkun);
             
             $data = [
                 'jenisMinuman' => $jenisMinuman,
                 'targetHarian' => $targetHarian,
                 'catatanMinum' => $catatanMinum,
-                'statistik' => $statistik
+                'statistik' => $statistik,
+                'namaPengguna' => $namaPengguna,
+                'dataPengguna' => $dataPengguna
             ];
             
-            $this->view('tracking', $data);
+            $this->view('tracking.php', $data);
 
         // klo error/blm ada datanya, ditampilkan default ini:
         } catch (Exception $e) {
-            $this->view('tracking', [
+            $this->view('tracking.php', [
                 'jenisMinuman' => [],
-                'targetHarian' => 2500,
+                'targetHarian' => 0,
                 'catatanMinum' => [],
                 'statistik' => ['total_diminum' => 0, 'jumlah_catatan' => 0],
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                'namaPengguna' => 'Pengguna',
+                'dataPengguna' => null
             ]);
         }
     }
@@ -56,12 +62,21 @@ class Tracking extends Controller {
     // Method untuk mendapatkan data via AJAX
     public function getData() {
         try {
-            $userId = $this->getSession('user_id') ?? 1;
+            $idAkun = $this->getSession('id_akun');
+
+            // if (!$idAkun) {
+            //     $this->jsonResponse([
+            //         'success' => false,
+            //         'message' => 'Anda belum login'
+            //     ]);
+            //     return;
+            // }
+
             $today = date('Y-m-d');
             
             $jenisMinuman = $this->trackingModel->getJenisMinuman();
-            $targetHarian = $this->trackingModel->getTargetHarian($userId);
-            $catatanMinum = $this->trackingModel->getCatatanMinumByDate($today, $userId);
+            $targetHarian = $this->trackingModel->getTargetHarian($idAkun);
+            $catatanMinum = $this->trackingModel->getCatatanMinumByDate($today, $idAkun);
             
             $this->jsonResponse([
                 'success' => true,
@@ -80,39 +95,40 @@ class Tracking extends Controller {
         }
     }
     
-    // Method untuk menambah catatan minum
+    // Method untuk tambah catatan minum
     public function tambah() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
-                // Ambil ID pengguna yang sedang login
-                $userId = $this->getSession('id_pengguna'); 
-                
-                if (empty($userId)) {
-                     $this->jsonResponse([
-                        'success' => false,
-                        'message' => 'Anda harus login untuk menambahkan catatan.'
-                    ]);
-                    return;
-                }
+                $idAkun = $this->getSession('id_akun');
 
-                $jenisMinumanId = $_POST['jenis_minuman_id'] ?? '';
-                $jumlah = $_POST['jumlah'] ?? '';
+                // if (!$idAkun) {
+                //     $this->jsonResponse([
+                //         'success' => false,
+                //         'message' => 'Anda belum login'
+                //     ]);
+                //     return;
+                // }
+
+                $jenis = $_POST['jenis'] ?? '';
+                $jumlah = $_POST['jumlah'] ?? 0;
+                $waktu = $_POST['waktu'] ?? '';
+                $tanggal = date('Y-m-d');
                 
-                if (empty($jenisMinumanId) || empty($jumlah) || !is_numeric($jumlah)) {
+                if (empty($jenis) || empty($jumlah) || empty($waktu)) {
                     $this->jsonResponse([
                         'success' => false,
-                        'message' => 'Input tidak valid'
+                        'message' => 'Data tidak lengkap'
                     ]);
                     return;
                 }
                 
-                // Panggil model dengan user ID yang dinamis
-                $result = $this->trackingModel->tambahCatatanMinum($jenisMinumanId, $jumlah, $userId); 
+                $result = $this->trackingModel->tambahCatatanMinum($jenis, $jumlah, $waktu, $tanggal, $idAkun);
                 
                 if ($result) {
                     $this->jsonResponse([
                         'success' => true,
-                        'message' => 'Catatan berhasil ditambahkan'
+                        'message' => 'Catatan berhasil ditambahkan',
+                        'id' => $result
                     ]);
                 } else {
                     $this->jsonResponse([
@@ -139,6 +155,16 @@ class Tracking extends Controller {
     public function update() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
+                $idAkun = $this->getSession('id_akun');
+
+                // if (!$idAkun) {
+                //     $this->jsonResponse([
+                //         'success' => false,
+                //         'message' => 'Anda belum login'
+                //     ]);
+                //     return;
+                // }
+
                 $id = $_POST['id'] ?? '';
                 $jenis = $_POST['jenis'] ?? '';
                 $jumlah = $_POST['jumlah'] ?? 0;
@@ -184,17 +210,16 @@ class Tracking extends Controller {
     public function hapus() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
-                // Ambil ID pengguna yang sedang login
-                $userId = $this->getSession('id_pengguna');
+                $idAkun = $this->getSession('id_akun');
                 
-                if (empty($userId)) {
-                    $this->jsonResponse([
-                       'success' => false,
-                       'message' => 'Anda harus login untuk menghapus catatan.'
-                   ]);
-                   return;
-               }
-                
+                // if (!$idAkun) {
+                //     $this->jsonResponse([
+                //         'success' => false,
+                //         'message' => 'Anda belum login'
+                //     ]);
+                //     return;
+                // }
+
                 $id = $_POST['id'] ?? '';
                 
                 if (empty($id)) {
@@ -205,8 +230,7 @@ class Tracking extends Controller {
                     return;
                 }
                 
-                // Panggil model dengan ID catatan dan user ID untuk keamanan
-                $result = $this->trackingModel->hapusCatatanMinum($id, $userId); 
+                $result = $this->trackingModel->hapusCatatanMinum($id);
                 
                 if ($result) {
                     $this->jsonResponse([
@@ -216,7 +240,7 @@ class Tracking extends Controller {
                 } else {
                     $this->jsonResponse([
                         'success' => false,
-                        'message' => 'Gagal menghapus catatan atau catatan bukan milik Anda'
+                        'message' => 'Gagal menghapus catatan'
                     ]);
                 }
 
