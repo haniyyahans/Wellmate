@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -69,7 +68,7 @@
                     <span>Berita dan Edukasi</span>
                 </a>
 
-                <a href="index.php?c=Friend&m=index" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="index.php?c=Friend&m=listFriends" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
                     <i class="fas fa-users"></i>
                     <span>Teman</span>
                 </a>
@@ -108,7 +107,9 @@
                 <!-- Banner & Summary Wrapper -->
                 <div class="mb-5 rounded-xl overflow-hidden bg-transparent">
                     <div class="bg-biru-primary text-white p-5 rounded-xl mb-0">
-                        <h1 class="m-0 mb-[5px] text-[1.8em] font-bold">Selamat Datang, Bree!</h1>
+                        <h1 class="m-0 mb-[5px] text-[1.8em] font-bold">
+                            Selamat Datang, <?php echo htmlspecialchars($namaPengguna ?? 'Pengguna'); ?>!
+                        </h1>
                         <p class="m-0">Mari jaga hidrasi tubuh Anda hari ini</p>
                     </div>
                     
@@ -221,6 +222,7 @@
         const TARGET_HARIAN = <?php echo $targetHarian; ?>;
         const JENIS_MINUMAN = <?php echo json_encode($jenisMinuman); ?>;
         let catatanMinuman = <?php echo json_encode($catatanMinum); ?>;
+        const DATA_PENGGUNA = <?php echo json_encode($dataPengguna); ?>;
         
         function formatVolume(ml) {
             if (ml >= 1000) {
