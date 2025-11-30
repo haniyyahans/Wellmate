@@ -1,11 +1,11 @@
 <?php
 
-class TrackingModel extends Model {
+class SaranModel extends Model {
     
-    // Get all jenis minuman
-    public function getJenisMinuman() {
+    // Get all aktivitas fisik
+    public function getAllAktivitas() {
         try {
-            $sql = "SELECT * FROM jenis_minuman ORDER BY id";
+            $sql = "SELECT * FROM aktivitas_fisik ORDER BY id";
             $result = $this->query($sql);
             $data = [];
             
@@ -22,17 +22,28 @@ class TrackingModel extends Model {
         }
     }
     
-    // Get user target harian (UPDATED - menggunakan id_akun)
+    // Get aktivitas by ID
+    public function getAktivitasById($id) {
+        try {
+            $id = $this->escape($id);
+            $sql = "SELECT * FROM aktivitas_fisik WHERE id = '$id'";
+            $result = $this->query($sql);
+            
+            return $result ? $result->fetch_assoc() : null;
+
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+    
+    // Get user target harian (untuk ditampilkan di summary)
     public function getTargetHarian($idAkun) {
         try {
             $idAkun = $this->escape($idAkun);
-            
-            // Ambil target dari user_target
             $sql = "SELECT ut.target_harian, p.berat_badan, p.usia
                     FROM user_target ut
                     LEFT JOIN pengguna p ON ut.id_akun = p.id_akun
                     WHERE ut.id_akun = '$idAkun'";
-            
             $result = $this->query($sql);
             
             if ($result && $row = $result->fetch_assoc()) {
@@ -76,7 +87,7 @@ class TrackingModel extends Model {
         }
     }
     
-    // Method helper untuk menghitung target otomatis
+    // TAMBAHKAN: Method helper untuk menghitung target otomatis
     private function hitungTargetOtomatis($beratBadan, $usia) {
         if (empty($beratBadan) || empty($usia) || $beratBadan <= 0 || $usia <= 0) {
             return 0;
@@ -105,7 +116,7 @@ class TrackingModel extends Model {
         return $targetMinum;
     }
     
-    // Method helper untuk update target harian
+    // TAMBAHKAN: Method helper untuk update target harian
     private function updateTargetHarian($idAkun, $targetHarian) {
         try {
             $idAkun = $this->escape($idAkun);
@@ -118,11 +129,12 @@ class TrackingModel extends Model {
             
             return $this->query($sql);
         } catch (Exception $e) {
+            error_log("Error updateTargetHarian: " . $e->getMessage());
             return false;
         }
     }
     
-    // Method helper untuk membuat target baru
+    // TAMBAHKAN: Method helper untuk membuat target baru
     private function buatTargetBaru($idAkun, $targetHarian) {
         try {
             $idAkun = $this->escape($idAkun);
@@ -133,94 +145,12 @@ class TrackingModel extends Model {
             
             return $this->query($sql);
         } catch (Exception $e) {
+            error_log("Error buatTargetBaru: " . $e->getMessage());
             return false;
         }
     }
-    
-    // Get catatan minum by date (UPDATED - menggunakan id_akun)
-    public function getCatatanMinumByDate($tanggal, $idAkun) {
-        try {
-            $tanggal = $this->escape($tanggal);
-            $idAkun = $this->escape($idAkun);
-            
-            $sql = "SELECT * FROM catatan_minum 
-                    WHERE tanggal = '$tanggal' AND id_akun = '$idAkun'
-                    ORDER BY waktu ASC";
-            
-            $result = $this->query($sql);
-            $data = [];
-            
-            if ($result) {
-                while ($row = $result->fetch_assoc()) {
-                    $data[] = $row;
-                }
-            }
-            
-            return $data;
 
-        } catch (Exception $e) {
-            return [];
-        }
-    }
-    
-    // Add new catatan minum (UPDATED - menggunakan id_akun)
-    public function tambahCatatanMinum($jenis, $jumlah, $waktu, $tanggal, $idAkun) {
-        try {
-            if (!$this->isConnected()) {
-                return false;
-            }
-            
-            $jenis = $this->escape($jenis);
-            $jumlah = $this->escape($jumlah);
-            $waktu = $this->escape($waktu);
-            $tanggal = $this->escape($tanggal);
-            $idAkun = $this->escape($idAkun);
-            
-            $sql = "INSERT INTO catatan_minum (id_akun, user_id, jenis, jumlah, waktu, tanggal) 
-                    VALUES ('$idAkun', '$idAkun', '$jenis', '$jumlah', '$waktu', '$tanggal')";
-            
-            $result = $this->query($sql);
-            
-            return ($result && $this->db !== null) ? $this->db->insert_id : false;
-
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-    
-    // Update catatan minum
-    public function updateCatatanMinum($id, $jenis, $jumlah, $waktu) {
-        try {
-            $id = $this->escape($id);
-            $jenis = $this->escape($jenis);
-            $jumlah = $this->escape($jumlah);
-            $waktu = $this->escape($waktu);
-            
-            $sql = "UPDATE catatan_minum 
-                    SET jenis = '$jenis', jumlah = '$jumlah', waktu = '$waktu'
-                    WHERE id = '$id'";
-            
-            return $this->query($sql);
-
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-    
-    // Delete catatan minum
-    public function hapusCatatanMinum($id) {
-        try {
-            $id = $this->escape($id);
-            $sql = "DELETE FROM catatan_minum WHERE id = '$id'";
-            
-            return $this->query($sql);
-
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-    
-    // Get statistics for today (UPDATED - menggunakan id_akun)
+    // Get statistik konsumsi hari ini (untuk summary section)
     public function getStatistikHariIni($idAkun) {
         try {
             $idAkun = $this->escape($idAkun);
