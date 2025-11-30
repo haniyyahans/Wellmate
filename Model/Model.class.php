@@ -45,6 +45,14 @@ class Model
         
         return $result;
     }
+
+     protected function escape($value) {
+        if ($this->db === null) {
+            return htmlspecialchars($value);
+        }
+        
+        return $this->db->real_escape_string($value);
+    }
     
     protected function isConnected() {
         return $this->db !== null && $this->db->ping();
@@ -57,3 +65,4 @@ class Model
         }
     }
 }
+
