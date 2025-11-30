@@ -1,5 +1,5 @@
 -- ============================================
--- DATABASE WELLMATE
+-- DATABASE WELLMATE - FITUR NOTIFIKASI & TEMAN
 -- ============================================
 
 -- Buat Database
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS akun (
 );
 
 -- ============================================
--- TABEL PENGGUNA
+-- TABEL PENGGUNA (untuk referensi FK)
 -- ============================================
 CREATE TABLE IF NOT EXISTS pengguna (
     id_pengguna INT AUTO_INCREMENT PRIMARY KEY,
@@ -27,8 +27,7 @@ CREATE TABLE IF NOT EXISTS pengguna (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_id_akun (id_akun),
-    FOREIGN KEY (id_akun) REFERENCES akun(id_akun) 
-        ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (id_akun) REFERENCES akun (id_akun) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- ============================================
@@ -47,13 +46,14 @@ CREATE TABLE IF NOT EXISTS jenis_minuman (
 -- ============================================
 CREATE TABLE IF NOT EXISTS catatan_minum (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT DEFAULT 1,
+    id_akun INT NOT NULL,
     jenis VARCHAR(50) NOT NULL,
     jumlah INT NOT NULL,
     waktu VARCHAR(10) NOT NULL,
     tanggal DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_user_tanggal (user_id, tanggal)
+    INDEX idx_akun_tanggal (id_akun, tanggal),
+    FOREIGN KEY (id_akun) REFERENCES akun (id_akun)
 );
 
 -- ============================================
@@ -61,11 +61,12 @@ CREATE TABLE IF NOT EXISTS catatan_minum (
 -- ============================================
 CREATE TABLE IF NOT EXISTS user_target (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT DEFAULT 1,
-    target_harian INT NOT NULL DEFAULT 2500,
+    id_akun INT NOT NULL,
+    target_harian INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY unique_user (user_id)
+    UNIQUE KEY unique_user (user_id),
+    FOREIGN KEY (id_akun) REFERENCES akun (id_akun)
 );
 
 -- ============================================
@@ -116,6 +117,60 @@ CREATE TABLE IF NOT EXISTS teman (
     INDEX idx_user_teman (id_user_teman),
     CONSTRAINT chk_different_users CHECK (id_pengguna != id_user_teman),
     CONSTRAINT chk_status CHECK (status IN ('pending', 'accepted', 'declined'))
+);
+
+-- ============================================
+-- TABEL BERITA_EDUKASI
+-- ============================================
+CREATE TABLE berita_edukasi (
+    id_berita INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT NOT NULL,
+    judul VARCHAR(150) NOT NULL,
+    isi TEXT NOT NULL,
+    kategori VARCHAR(50),
+    tanggal_publish TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    sumber VARCHAR(50),
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
+);
+
+-- ============================================
+-- TABEL RIWAYAT_BACA
+-- ============================================
+CREATE TABLE riwayat_baca (
+    id_riwayat INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT NOT NULL,
+    id_berita INT NOT NULL,
+    waktu_baca TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna),
+    FOREIGN KEY (id_berita) REFERENCES berita_edukasi(id_berita)
+);
+
+-- ============================================
+-- TABEL RIWAYAT_MINUM
+-- ============================================
+CREATE TABLE riwayat_minum (
+    id_riwayat INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT NOT NULL,
+    total_harian DECIMAL(10,2) NULL,
+    tanggal TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    persentase_target DECIMAL(5,2) NULL,
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
+);
+
+-- ============================================
+-- TABEL LAPORAN
+-- ============================================
+CREATE TABLE laporan (
+    id_laporan INT AUTO_INCREMENT PRIMARY KEY,
+    id_pengguna INT NOT NULL,
+    jenis_laporan VARCHAR(100) NULL,
+    periode INT NULL,
+    jumlah_konsumsi INT NULL,
+    persentase DECIMAL(5,2) NULL,
+    kategori_pencapaian VARCHAR(50) NULL,
+    analisis_pencapaian VARCHAR(1000) NULL,
+    rekomendasi VARCHAR(500) NULL,
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
 );
 
 -- ============================================
@@ -236,32 +291,6 @@ INSERT INTO teman (id_pengguna, id_user_teman, status, tanggal) VALUES
 (4, 6, 'declined', '2025-01-12');
 
 -- ============================================
--- TABEL BERITA_EDUKASI
--- ============================================
-CREATE TABLE berita_edukasi (
-    id_berita INT AUTO_INCREMENT PRIMARY KEY,
-    id_pengguna INT NOT NULL,
-    judul VARCHAR(150) NOT NULL,
-    isi TEXT NOT NULL,
-    kategori VARCHAR(50),
-    tanggal_publish TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    sumber VARCHAR(50),
-    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
-);
-
--- ============================================
--- TABEL RIWAYAT_BACA
--- ============================================
-CREATE TABLE riwayat_baca (
-    id_riwayat INT AUTO_INCREMENT PRIMARY KEY,
-    id_pengguna INT NOT NULL,
-    id_berita INT NOT NULL,
-    waktu_baca TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna),
-    FOREIGN KEY (id_berita) REFERENCES berita_edukasi(id_berita)
-);
-
--- ============================================
 -- INSERT DATA DUMMY - BERITA_EDUKASI
 -- ============================================
 INSERT INTO berita_edukasi (id_pengguna, judul, isi, kategori, sumber)
@@ -304,34 +333,6 @@ Tips Edukasi:
 'Banyak informasi keliru tentang konsumsi air, seperti "semua orang harus minum 8 gelas per hari". Faktanya, kebutuhan cairan berbeda bagi setiap orang berdasarkan aktivitas, usia, dan kondisi kesehatan. Oleh karena itu, penting memeriksa informasi kesehatan dari sumber tepercaya sebelum mempercayainya.',
 'Edukasi dan fakta sains',
 'National Institutes of Health (NIH)');
-
--- ============================================
--- TABEL RIWAYAT_MINUM
--- ============================================
-CREATE TABLE riwayat_minum (
-    id_riwayat INT AUTO_INCREMENT PRIMARY KEY,
-    id_pengguna INT NOT NULL,
-    total_harian DECIMAL(10,2) NULL,
-    tanggal TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    persentase_target DECIMAL(5,2) NULL,
-    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
-);
-
--- ============================================
--- TABEL LAPORAN
--- ============================================
-CREATE TABLE laporan (
-    id_laporan INT AUTO_INCREMENT PRIMARY KEY,
-    id_pengguna INT NOT NULL,
-    jenis_laporan VARCHAR(100) NULL,
-    periode INT NULL,
-    jumlah_konsumsi INT NULL,
-    persentase DECIMAL(5,2) NULL,
-    kategori_pencapaian VARCHAR(50) NULL,
-    analisis_pencapaian VARCHAR(1000) NULL,
-    rekomendasi VARCHAR(500) NULL,
-    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna)
-);
 
 -- ============================================
 -- INSERT DATA DUMMY - RIWAYAT_MINUM
