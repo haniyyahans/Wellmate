@@ -2,26 +2,36 @@
 
 class Saran extends Controller {
     private $saranModel;
+    private $penggunaModel;
     
     public function __construct() {
         $this->saranModel = $this->model('SaranModel');
+        $this->penggunaModel = $this->model('PenggunaModel');
         $this->startSession();
+
+        if (!$this->getSession('id_akun')) {
+            $this->setSession('id_akun', 1);
+        }
     }
     
     // Method default untuk menampilkan halaman saran aktivitas
     public function index() {
         try {
-            $userId = $this->getSession('user_id') ?? 1;
+            $idAkun = $this->getSession('id_akun');
             
+            $dataPengguna = $this->penggunaModel->getDataPengguna($idAkun);
+            $namaPengguna = $dataPengguna ? $dataPengguna['nama'] : 'Pengguna';
             // Get data yang diperlukan
             $aktivitas = $this->saranModel->getAllAktivitas();
-            $targetHarian = $this->saranModel->getTargetHarian($userId);
-            $statistik = $this->saranModel->getStatistikHariIni($userId);
+            $targetHarian = $this->saranModel->getTargetHarian($idAkun);
+            $statistik = $this->saranModel->getStatistikHariIni($idAkun);
             
             $data = [
                 'aktivitas' => $aktivitas,
                 'targetHarian' => $targetHarian,
-                'statistik' => $statistik
+                'statistik' => $statistik,
+                'namaPengguna' => $namaPengguna,
+                'dataPengguna' => $dataPengguna
             ];
             
             $this->view('saran.php', $data);
@@ -29,8 +39,10 @@ class Saran extends Controller {
         } catch (Exception $e) {
             $this->view('saran.php', [
                 'aktivitas' => [],
-                'targetHarian' => 2500,
-                'statistik' => ['total_diminum' => 0, 'jumlah_catatan' => 0]
+                'targetHarian' => 0,
+                'statistik' => ['total_diminum' => 0, 'jumlah_catatan' => 0],
+                'namaPengguna' => 'Pengguna',
+                'dataPengguna' => null
             ]);
         }
     }
