@@ -22,55 +22,46 @@
     <div class="flex h-screen">
         <!-- Sidebar -->
         <aside class="w-64 bg-white shadow-lg flex flex-col">
-            <!-- Logo -->
             <div class="py-5">
-                <a href="index.html" class="-mt-[50px] -mb-[25px] flex items-center no-underline">
+                <a href="index.php" class="-mt-[50px] -mb-[25px] flex items-center no-underline">
                     <img src="/assets/logoWellmate.jpg" alt="WellMate Logo" class="h-[140px] -mr-10 -ml-8">
                     <span class="text-[1.4em] text-gray-700 font-bold pb-[15px]">WellMate</span>
                 </a>
             </div>
 
-            <!-- Menu -->
             <nav class="flex-1 p-4 space-y-2">
-                <a href="berandapage.html" class="flex items-center space-x-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-lg">
+                <a href="index.php?c=Beranda&m=index" class="flex items-center space-x-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-lg">
                     <i class="fas fa-chart-line"></i>
                     <span class="font-medium">Beranda</span>
                 </a>
-
-                <a href="tracking.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
                     <i class="fas fa-glass-water"></i>
                     <span>Tracking Minum</span>
                 </a>
-
-                <a href="saran.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
                     <i class="fas fa-running"></i>
                     <span>Saran Aktivitas</span>
                 </a>
-
-                <a href="laporandanAnalisis.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
                     <i class="fas fa-chart-bar"></i>
                     <span>Laporan dan Analisis</span>
                 </a>
-
-                <a href="beritaEdukasi.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
                     <i class="fas fa-newspaper"></i>
                     <span>Berita dan Edukasi</span>
                 </a>
-
-                <a href="lihatTeman.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
                     <i class="fas fa-users"></i>
                     <span>Teman</span>
                 </a>
-
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
                     <i class="fas fa-cog"></i>
                     <span>Pengaturan</span>
                 </a>
             </nav>
 
-            <!-- Logout -->
             <div class="p-3 no-underline">
-                <a href="signinpage.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                     </svg>
@@ -85,14 +76,12 @@
             <header class="flex justify-between items-center bg-white px-8 py-4 shadow-sm">
                 <div></div>
                 <div class="flex items-center space-x-4">
-                    <!-- Ikon Notifikasi -->
                     <div class="relative">
-                        <a href="notifikasi.html" class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
+                        <a href="#" class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
                             <i class="fas fa-bell text-xl"></i>
                             <span class="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">6</span>
                         </a>
                     </div>
-                    <!-- Foto Profil -->
                     <div class="w-10 h-10 bg-blue-400 rounded-full overflow-hidden flex items-center justify-center">
                         <img src="/assets/fotoProfil.jpg" alt="Profile Picture" class="w-full h-full object-cover">
                     </div>
@@ -106,14 +95,11 @@
                     <div class="bg-white rounded-lg shadow-md p-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-6">Progress Hidrasi Hari Ini</h2>
                         
-                        <!-- Chart Placeholder -->
                         <div class="flex justify-center items-center mb-6">
                             <div class="relative w-64 h-64">
                                 <svg class="transform -rotate-90 w-64 h-64">
                                     <circle cx="128" cy="128" r="100" stroke="#E5E7EB" stroke-width="24" fill="none"/>
                                     <circle cx="128" cy="128" r="100" stroke="#3B82F6" stroke-width="24" fill="none" stroke-dasharray="628" stroke-dashoffset="176" />
-                                    <circle cx="128" cy="128" r="100" stroke="#F59E0B" stroke-width="24" fill="none" stroke-dasharray="628" stroke-dashoffset="440" />
-                                    <circle cx="128" cy="128" r="100" stroke="#10B981" stroke-width="24" fill="none" stroke-dasharray="628" stroke-dashoffset="565" />
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center">
                                     <span class="text-5xl font-bold text-blue-600">72%</span>
@@ -122,7 +108,6 @@
                             </div>
                         </div>
 
-                        <!-- Stats -->
                         <div class="grid grid-cols-2 gap-4">
                             <div class="text-center bg-blue-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Diminum Hari Ini</p>
@@ -177,19 +162,21 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <div>
                             <p class="text-sm text-gray-500 mb-1">Nama</p>
-                            <p class="font-semibold text-gray-800 biodata-nama">Bree</p>
+                            <p class="font-semibold text-gray-800 biodata-nama">
+                                <?php echo isset($dataPengguna['nama']) ? htmlspecialchars($dataPengguna['nama']) : '-'; ?>
+                            </p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500 mb-1">Usia</p>
-                            <p class="font-semibold text-gray-800 biodata-usia">18</p>
+                            <p class="font-semibold text-gray-800 biodata-usia">
+                                <?php echo isset($dataPengguna['usia']) && $dataPengguna['usia'] ? htmlspecialchars($dataPengguna['usia']) : '-'; ?>
+                            </p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500 mb-1">Berat Badan</p>
-                            <p class="font-semibold text-gray-800 biodata-berat">25 kg</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500 mb-1">Email</p>
-                            <p class="font-semibold text-gray-800 biodata-email">Bree123@gmail.com</p>
+                            <p class="font-semibold text-gray-800 biodata-berat">
+                                <?php echo isset($dataPengguna['berat_badan']) && $dataPengguna['berat_badan'] ? htmlspecialchars($dataPengguna['berat_badan']) . ' kg' : '-'; ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -203,61 +190,53 @@
     <!-- Modal Pop-up Biodata -->
     <div id="biodataModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-            <!-- Header -->
             <div class="p-6 border-b">
-                <h2 class="text-xl font-bold text-gray-800">Biodata Pengguna</h2>
+                <h2 class="text-xl font-bold text-gray-800">Edit Biodata Pengguna</h2>
             </div>
 
-            <!-- Form -->
-            <form class="p-6 space-y-4">
-                <!-- Nama -->
+            <form id="biodataForm" class="p-6 space-y-4">
                 <div>
                     <label for="nama" class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
                     <input 
                         type="text" 
                         id="nama" 
-                        value="Bree"
+                        name="nama"
+                        value="<?php echo isset($dataPengguna['nama']) ? htmlspecialchars($dataPengguna['nama']) : ''; ?>"
+                        required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-150"
                     >
                 </div>
 
-                <!-- Usia -->
                 <div>
                     <label for="usia" class="block text-sm font-medium text-gray-700 mb-2">Usia</label>
                     <input 
                         type="number" 
                         id="usia" 
-                        value="18"
+                        name="usia"
+                        value="<?php echo isset($dataPengguna['usia']) ? htmlspecialchars($dataPengguna['usia']) : ''; ?>"
+                        min="1"
+                        max="150"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-150"
                     >
                 </div>
 
-                <!-- Berat Badan -->
                 <div>
-                    <label for="beratBadan" class="block text-sm font-medium text-gray-700 mb-2">Berat Badan</label>
+                    <label for="beratBadan" class="block text-sm font-medium text-gray-700 mb-2">Berat Badan (kg)</label>
                     <input 
                         type="number" 
                         id="beratBadan" 
-                        value="25"
+                        name="berat_badan"
+                        value="<?php echo isset($dataPengguna['berat_badan']) ? htmlspecialchars($dataPengguna['berat_badan']) : ''; ?>"
+                        step="0.1"
+                        min="1"
+                        max="300"
+                        required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-150"
                     >
                 </div>
 
-                <!-- Email -->
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        value="Bree123@gmail.com"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-150"
-                    >
-                </div>
-
-                <!-- Submit Button -->
                 <button 
                     type="submit"
-                    onclick="submitForm(event)"
                     class="w-full py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition duration-150 flex items-center justify-center space-x-2"
                 >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -278,7 +257,6 @@
             modal.classList.remove('hidden');
             overlay.classList.remove('hidden');
             
-            // Trigger animation
             setTimeout(() => {
                 overlay.classList.add('opacity-100');
                 content.classList.remove('scale-95', 'opacity-0');
@@ -301,29 +279,40 @@
             }, 300);
         }
 
-        function submitForm(event) {
-            event.preventDefault();
+        document.getElementById('biodataForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            const nama = document.getElementById('nama').value;
-            const usia = document.getElementById('usia').value;
-            const beratBadan = document.getElementById('beratBadan').value;
-            const email = document.getElementById('email').value;
+            const formData = new FormData(this);
             
-            // Update biodata display
-            document.querySelectorAll('.biodata-nama').forEach(el => el.textContent = nama);
-            document.querySelectorAll('.biodata-usia').forEach(el => el.textContent = usia);
-            document.querySelectorAll('.biodata-berat').forEach(el => el.textContent = beratBadan + ' kg');
-            document.querySelectorAll('.biodata-email').forEach(el => el.textContent = email);
-            
-            console.log('Data updated:', { nama, usia, beratBadan, email });
-            
-            closeModal();
-        }
+            fetch('index.php?c=Beranda&m=updateBiodata', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update tampilan
+                    if (data.data) {
+                        document.querySelector('.biodata-nama').textContent = data.data.nama || '-';
+                        document.querySelector('.biodata-usia').textContent = data.data.usia || '-';
+                        document.querySelector('.biodata-berat').textContent = data.data.berat_badan ? data.data.berat_badan + ' kg' : '-';
+                    }
+                    
+                    alert('Biodata berhasil diupdate!');
+                    closeModal();
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat menyimpan data');
+            });
+        });
 
-        // Close modal when clicking overlay
         document.getElementById('modalOverlay').addEventListener('click', closeModal);
 
-        // Close modal with ESC key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeModal();
