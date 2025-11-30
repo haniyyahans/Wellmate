@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS user_target (
     target_harian INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY unique_user (user_id),
+    UNIQUE KEY unique_user (id_akun),
     FOREIGN KEY (id_akun) REFERENCES akun (id_akun)
 );
 
