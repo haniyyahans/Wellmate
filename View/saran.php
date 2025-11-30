@@ -57,6 +57,21 @@
                     <i class="fas fa-chart-bar"></i>
                     <span>Laporan dan Analisis</span>
                 </a>
+
+                <a href="index.php?c=News&m=index" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Berita dan Edukasi</span>
+                </a>
+
+                <a href="index.php?c=Friend&m=listFriends" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-users"></i>
+                    <span>Teman</span>
+                </a>
+
+                <a href="index.php?c=Settings&m=index" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
+                </a>
             </nav>
 
             <!-- Logout -->
@@ -87,7 +102,7 @@
             <main class="flex-1 overflow-y-auto bg-blue-100 p-6">
                 <!-- Welcome Banner -->
                 <div class="bg-biru-primary text-white p-5 rounded-xl mb-0">
-                    <h1 class="m-0 mb-[5px] text-[1.8em]">Saran Aktivitas dan Cairan</h1>
+                    <h1 class="m-0 mb-[5px] text-[1.8em] font-bold">Saran Aktivitas dan Cairan</h1>
                     <p class="m-0">Lihat kebutuhan hidrasi ekstra Anda berdasarkan aktivitas fisik.</p>
                 </div>
                 
